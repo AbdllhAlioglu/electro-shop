@@ -1,0 +1,413 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "name": "LED Light Bulb",
+      "category": "Lighting",
+      "price": 5.99,
+      "brand": "EcoBright",
+      "rating": 4.5,
+      "stock": 120,
+      "description": "Energy-efficient LED bulb with 800 lumens.",
+      "power": "8W",
+      "features": [
+        "Long lifespan",
+        "Warm white light",
+        "Energy-saving"
+      ],
+      "image": "./src/assets/LED-Light-Bulb.png"
+    },
+    {
+      "id": 2,
+      "name": "Smart Plug",
+      "category": "Smart Home",
+      "price": 19.99,
+      "brand": "HomeTech",
+      "rating": 4.3,
+      "stock": 60,
+      "description": "Wi-Fi enabled plug for smart home automation.",
+      "power": "Max 2000W",
+      "features": [
+        "App control",
+        "Voice assistant compatible",
+        "Timer function"
+      ],
+      "image": "./src/assets/WIFI_Plug.jpg"
+    },
+    {
+      "id": 3,
+      "name": "Portable Power Bank",
+      "category": "Charging",
+      "price": 29.99,
+      "brand": "ChargePro",
+      "rating": 4.7,
+      "stock": 200,
+      "description": "Compact 10,000mAh power bank with fast charging.",
+      "power": "10,000mAh",
+      "features": [
+        "Fast charging",
+        "Lightweight",
+        "Dual USB ports"
+      ],
+      "image": "./src/assets/Powerbank.png"
+    },
+    {
+      "id": 4,
+      "name": "Electric Kettle",
+      "category": "Appliances",
+      "price": 24.99,
+      "brand": "QuickBoil",
+      "rating": 4.4,
+      "stock": 75,
+      "description": "Stainless steel electric kettle with 1.5L capacity.",
+      "power": "1500W",
+      "features": [
+        "Auto shut-off",
+        "Boil-dry protection",
+        "Ergonomic design"
+      ],
+      "image": "./src/assets/Kattle.png"
+    },
+    {
+      "id": 5,
+      "name": "Ceiling Fan",
+      "category": "Cooling",
+      "price": 89.99,
+      "brand": "BreezeCool",
+      "rating": 4.2,
+      "stock": 30,
+      "description": "Energy-efficient ceiling fan with remote control.",
+      "power": "70W",
+      "features": [
+        "Three speed settings",
+        "LED light",
+        "Silent operation"
+      ],
+      "image": "./src/assets/Fan.png"
+    },
+    {
+      "id": 6,
+      "name": "USB Desk Lamp",
+      "category": "Lighting",
+      "price": 15.49,
+      "brand": "LightEase",
+      "rating": 4.6,
+      "stock": 90,
+      "description": "Adjustable desk lamp with USB charging port.",
+      "power": "10W",
+      "features": [
+        "Adjustable brightness",
+        "Flexible neck",
+        "Touch control"
+      ],
+      "image": "./src/assets/USB-Desk-Lamp.png"
+    },
+    {
+      "id": 7,
+      "name": "Electric Drill",
+      "category": "Tools",
+      "price": 49.99,
+      "brand": "DrillMaster",
+      "rating": 4.5,
+      "stock": 50,
+      "description": "Cordless drill with variable speed control.",
+      "power": "18V",
+      "features": [
+        "Rechargeable battery",
+        "LED light",
+        "Ergonomic handle"
+      ],
+      "image": "./src/assets/Electric-Drill.png"
+    },
+    {
+      "id": 8,
+      "name": "Hair Dryer",
+      "category": "Personal Care",
+      "price": 39.99,
+      "brand": "StylePro",
+      "rating": 4.3,
+      "stock": 110,
+      "description": "Powerful hair dryer with ionic technology.",
+      "power": "1800W",
+      "features": [
+        "Three heat settings",
+        "Cool shot button",
+        "Lightweight"
+      ],
+      "image": "./src/assets/Hair-Dryer.png"
+    },
+    {
+      "id": 9,
+      "name": "Electric Heater",
+      "category": "Heating",
+      "price": 59.99,
+      "brand": "WarmHome",
+      "rating": 4.1,
+      "stock": 40,
+      "description": "Compact electric heater with thermostat control.",
+      "power": "1500W",
+      "features": [
+        "Portable design",
+        "Overheat protection",
+        "Energy-efficient"
+      ],
+      "image": "./src/assets/Electirc-Heater.png"
+    },
+    {
+      "id": 10,
+      "name": "Rechargeable LED Lantern",
+      "category": "Lighting",
+      "price": 22.99,
+      "brand": "GlowLite",
+      "rating": 4.7,
+      "stock": 70,
+      "description": "Durable LED lantern with rechargeable battery.",
+      "power": "5W",
+      "features": [
+        "Long battery life",
+        "Water-resistant",
+        "Multiple brightness modes"
+      ],
+      "image": "./src/assets/LED-Lantern.png"
+    },
+    {
+      "id": 11,
+      "name": "Smart Thermostat",
+      "category": "Smart Home",
+      "price": 129.99,
+      "brand": "EcoControl",
+      "rating": 4.8,
+      "stock": 25,
+      "description": "Wi-Fi enabled thermostat with remote control capabilities.",
+      "power": "5V",
+      "features": [
+        "Energy monitoring",
+        "Remote access",
+        "Programmable schedule"
+      ],
+      "image": "./src/assets/Smart-Thermostat.png"
+    },
+    {
+      "id": 12,
+      "name": "Wireless Security Camera",
+      "category": "Smart Home",
+      "price": 59.99,
+      "brand": "SecureView",
+      "rating": 4.6,
+      "stock": 70,
+      "description": "High-definition wireless security camera with night vision.",
+      "power": "12V",
+      "features": [
+        "Motion detection",
+        "Cloud storage",
+        "Wide-angle lens"
+      ],
+      "image": "./src/assets/SecurityCamera.png"
+    },
+    {
+      "id": 13,
+      "name": "Solar Garden Lights",
+      "category": "Lighting",
+      "price": 29.99,
+      "brand": "SolarGlow",
+      "rating": 4.3,
+      "stock": 100,
+      "description": "Set of 8 solar-powered LED garden lights.",
+      "power": "Solar",
+      "features": [
+        "Weatherproof",
+        "Auto on/off",
+        "Energy-efficient"
+      ],
+      "image": "./src/assets/SolarGardenLights.png"
+    },
+    {
+      "id": 14,
+      "name": "Robot Vacuum Cleaner",
+      "category": "Appliances",
+      "price": 299.99,
+      "brand": "CleanBot",
+      "rating": 4.5,
+      "stock": 15,
+      "description": "Smart robotic vacuum cleaner with app control.",
+      "power": "Rechargeable",
+      "features": [
+        "Auto cleaning mode",
+        "Anti-collision sensors",
+        "Long battery life"
+      ],
+      "image": "./src/assets/VaccumCleaner.png"
+    },
+    {
+      "id": 15,
+      "name": "Smart Door Lock",
+      "category": "Smart Home",
+      "price": 149.99,
+      "brand": "KeylessPro",
+      "rating": 4.7,
+      "stock": 35,
+      "description": "Smart door lock with fingerprint and app access.",
+      "power": "Battery-operated",
+      "features": [
+        "Auto lock",
+        "Remote access",
+        "Tamper alarm"
+      ],
+      "image": "./src/assets/SmartDoorLock.png"
+    },
+    {
+      "id": 16,
+      "name": "LED Strip Lights",
+      "category": "Lighting",
+      "price": 19.99,
+      "brand": "ColorGlow",
+      "rating": 4.4,
+      "stock": 150,
+      "description": "Flexible LED strip lights with multiple color modes.",
+      "power": "12V",
+      "features": [
+        "Remote control",
+        "DIY installation",
+        "Long-lasting"
+      ],
+      "image": "./src/assets/StripLight.png"
+    },
+    {
+      "id": 17,
+      "name": "Cordless Vacuum Cleaner",
+      "category": "Appliances",
+      "price": 199.99,
+      "brand": "DustAway",
+      "rating": 4.6,
+      "stock": 40,
+      "description": "Lightweight cordless vacuum cleaner with strong suction.",
+      "power": "Rechargeable",
+      "features": [
+        "Detachable battery",
+        "Multi-surface cleaning",
+        "LED headlight"
+      ],
+      "image": "./src/assets/CordlessVaccum.png"
+    },
+    {
+      "id": 18,
+      "name": "Portable Blender",
+      "category": "Appliances",
+      "price": 34.99,
+      "brand": "BlendOn",
+      "rating": 4.3,
+      "stock": 80,
+      "description": "Rechargeable portable blender for smoothies and shakes.",
+      "power": "Rechargeable",
+      "features": [
+        "Compact design",
+        "Easy to clean",
+        "USB charging"
+      ],
+      "image": "./src/assets/Blender.png"
+    },
+    {
+      "id": 19,
+      "name": "Electric Screwdriver",
+      "category": "Tools",
+      "price": 39.99,
+      "brand": "FixIt",
+      "rating": 4.2,
+      "stock": 65,
+      "description": "Compact electric screwdriver with multiple bits.",
+      "power": "Rechargeable",
+      "features": [
+        "Lightweight",
+        "LED light",
+        "Magnetic tip"
+      ],
+      "image": "./src/assets/ElectircScrewdriver.png"
+    },
+    {
+      "id": 20,
+      "name": "Electric Toaster",
+      "category": "Appliances",
+      "price": 49.99,
+      "brand": "ToastPerfect",
+      "rating": 4.5,
+      "stock": 50,
+      "description": "2-slice electric toaster with browning control.",
+      "power": "800W",
+      "features": [
+        "Defrost mode",
+        "Removable crumb tray",
+        "Compact design"
+      ],
+      "image": "./src/assets/ElectricToaster.png"
+    }
+  ],
+  "orders": [
+    {
+      "id": "5bbb",
+      "customer": "Abdullah",
+      "phone": "05079400915",
+      "address": "kastamonu",
+      "priority": true,
+      "cart": [
+        {
+          "id": "2",
+          "name": "Smart Plug",
+          "price": 19.99,
+          "image": "./src/assets/WIFI_Plug.jpg",
+          "quantity": 1,
+          "totalPrice": 19.99
+        },
+        {
+          "id": 1,
+          "name": "LED Light Bulb",
+          "price": 5.99,
+          "image": "./src/assets/LED-Light-Bulb.png",
+          "quantity": 1,
+          "totalPrice": 5.99
+        },
+        {
+          "id": 3,
+          "name": "Portable Power Bank",
+          "price": 29.99,
+          "image": "./src/assets/Powerbank.png",
+          "quantity": 1,
+          "totalPrice": 29.99
+        }
+      ]
+    },
+    {
+      "id": "a1ab",
+      "customer": "asdas",
+      "phone": "32423",
+      "address": "asda",
+      "cart": [
+        {
+          "id": 2,
+          "name": "Smart Plug",
+          "price": 19.99,
+          "image": "./src/assets/WIFI_Plug.jpg",
+          "quantity": 1,
+          "totalPrice": 19.99
+        }
+      ],
+      "priority": false
+    },
+    {
+      "id": "e30c",
+      "customer": "asdas",
+      "phone": "23423",
+      "address": "sadasdas",
+      "cart": [
+        {
+          "id": 2,
+          "name": "Smart Plug",
+          "price": 19.99,
+          "image": "./src/assets/WIFI_Plug.jpg",
+          "quantity": 1,
+          "totalPrice": 19.99
+        }
+      ],
+      "priority": false
+    }
+  ]
+}
