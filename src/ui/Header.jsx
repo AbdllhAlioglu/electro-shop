@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import logo from "../assets/Logo.svg";
+import logo from "/assets/Logo.svg";
 import { useSelector, useDispatch } from "react-redux";
 import { resetName } from "../features/user/userSlice";
 import { FaSignOutAlt } from "react-icons/fa";
-import avatar from "../assets/avatar.svg";
+import avatar from "/assets/avatar.svg";
 
 export default function Header() {
   const username = useSelector((state) => state.user.userName);

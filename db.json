@@ -15,7 +15,7 @@
         "Warm white light",
         "Energy-saving"
       ],
-      "image": "./src/assets/LED-Light-Bulb.png"
+      "image": "/assets/LED-Light-Bulb.png"
     },
     {
       "id": 2,
@@ -32,7 +32,7 @@
         "Voice assistant compatible",
         "Timer function"
       ],
-      "image": "./src/assets/WIFI_Plug.jpg"
+      "image": "/assets/WIFI_Plug.jpg"
     },
     {
       "id": 3,
@@ -49,7 +49,7 @@
         "Lightweight",
         "Dual USB ports"
       ],
-      "image": "./src/assets/Powerbank.png"
+      "image": "/assets/Powerbank.png"
     },
     {
       "id": 4,
@@ -66,7 +66,7 @@
         "Boil-dry protection",
         "Ergonomic design"
       ],
-      "image": "./src/assets/Kattle.png"
+      "image": "/assets/Kattle.png"
     },
     {
       "id": 5,
@@ -83,7 +83,7 @@
         "LED light",
         "Silent operation"
       ],
-      "image": "./src/assets/Fan.png"
+      "image": "/assets/Fan.png"
     },
     {
       "id": 6,
@@ -100,7 +100,7 @@
         "Flexible neck",
         "Touch control"
       ],
-      "image": "./src/assets/USB-Desk-Lamp.png"
+      "image": "/assets/USB-Desk-Lamp.png"
     },
     {
       "id": 7,
@@ -117,7 +117,7 @@
         "LED light",
         "Ergonomic handle"
       ],
-      "image": "./src/assets/Electric-Drill.png"
+      "image": "/assets/Electric-Drill.png"
     },
     {
       "id": 8,
@@ -134,7 +134,7 @@
         "Cool shot button",
         "Lightweight"
       ],
-      "image": "./src/assets/Hair-Dryer.png"
+      "image": "/assets/Hair-Dryer.png"
     },
     {
       "id": 9,
@@ -151,7 +151,7 @@
         "Overheat protection",
         "Energy-efficient"
       ],
-      "image": "./src/assets/Electirc-Heater.png"
+      "image": "/assets/Electirc-Heater.png"
     },
     {
       "id": 10,
@@ -168,7 +168,7 @@
         "Water-resistant",
         "Multiple brightness modes"
       ],
-      "image": "./src/assets/LED-Lantern.png"
+      "image": "/assets/LED-Lantern.png"
     },
     {
       "id": 11,
@@ -185,7 +185,7 @@
         "Remote access",
         "Programmable schedule"
       ],
-      "image": "./src/assets/Smart-Thermostat.png"
+      "image": "/assets/Smart-Thermostat.png"
     },
     {
       "id": 12,
@@ -202,7 +202,7 @@
         "Cloud storage",
         "Wide-angle lens"
       ],
-      "image": "./src/assets/SecurityCamera.png"
+      "image": "/assets/SecurityCamera.png"
     },
     {
       "id": 13,
@@ -219,7 +219,7 @@
         "Auto on/off",
         "Energy-efficient"
       ],
-      "image": "./src/assets/SolarGardenLights.png"
+      "image": "/assets/SolarGardenLights.png"
     },
     {
       "id": 14,
@@ -236,7 +236,7 @@
         "Anti-collision sensors",
         "Long battery life"
       ],
-      "image": "./src/assets/VaccumCleaner.png"
+      "image": "/assets/VaccumCleaner.png"
     },
     {
       "id": 15,
@@ -253,7 +253,7 @@
         "Remote access",
         "Tamper alarm"
       ],
-      "image": "./src/assets/SmartDoorLock.png"
+      "image": "/assets/SmartDoorLock.png"
     },
     {
       "id": 16,
@@ -270,7 +270,7 @@
         "DIY installation",
         "Long-lasting"
       ],
-      "image": "./src/assets/StripLight.png"
+      "image": "/assets/StripLight.png"
     },
     {
       "id": 17,
@@ -287,7 +287,7 @@
         "Multi-surface cleaning",
         "LED headlight"
       ],
-      "image": "./src/assets/CordlessVaccum.png"
+      "image": "/assets/CordlessVaccum.png"
     },
     {
       "id": 18,
@@ -304,7 +304,7 @@
         "Easy to clean",
         "USB charging"
       ],
-      "image": "./src/assets/Blender.png"
+      "image": "/assets/Blender.png"
     },
     {
       "id": 19,
@@ -321,7 +321,7 @@
         "LED light",
         "Magnetic tip"
       ],
-      "image": "./src/assets/ElectircScrewdriver.png"
+      "image": "/assets/ElectircScrewdriver.png"
     },
     {
       "id": 20,
@@ -338,71 +338,29 @@
         "Removable crumb tray",
         "Compact design"
       ],
-      "image": "./src/assets/ElectricToaster.png"
+      "image": "/assets/ElectricToaster.png"
     }
   ],
   "orders": [
     {
-      "id": "5bbb",
-      "customer": "Abdullah",
-      "phone": "05079400915",
-      "address": "kastamonu",
-      "priority": true,
+      "id": "eb45",
+      "customer": "asdasdasdas",
+      "phone": "43534",
+      "address": "asdasdas",
       "cart": [
-        {
-          "id": "2",
-          "name": "Smart Plug",
-          "price": 19.99,
-          "image": "./src/assets/WIFI_Plug.jpg",
-          "quantity": 1,
-          "totalPrice": 19.99
-        },
         {
           "id": 1,
           "name": "LED Light Bulb",
           "price": 5.99,
-          "image": "./src/assets/LED-Light-Bulb.png",
+          "image": "/assets/LED-Light-Bulb.png",
           "quantity": 1,
           "totalPrice": 5.99
         },
         {
-          "id": 3,
-          "name": "Portable Power Bank",
-          "price": 29.99,
-          "image": "./src/assets/Powerbank.png",
-          "quantity": 1,
-          "totalPrice": 29.99
-        }
-      ]
-    },
-    {
-      "id": "a1ab",
-      "customer": "asdas",
-      "phone": "32423",
-      "address": "asda",
-      "cart": [
-        {
           "id": 2,
           "name": "Smart Plug",
           "price": 19.99,
-          "image": "./src/assets/WIFI_Plug.jpg",
-          "quantity": 1,
-          "totalPrice": 19.99
-        }
-      ],
-      "priority": false
-    },
-    {
-      "id": "e30c",
-      "customer": "asdas",
-      "phone": "23423",
-      "address": "sadasdas",
-      "cart": [
-        {
-          "id": 2,
-          "name": "Smart Plug",
-          "price": 19.99,
-          "image": "./src/assets/WIFI_Plug.jpg",
+          "image": "/assets/WIFI_Plug.jpg",
           "quantity": 1,
           "totalPrice": 19.99
         }

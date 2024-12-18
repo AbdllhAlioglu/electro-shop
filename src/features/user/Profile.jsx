@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import avatar from "../../assets/avatar.svg";
+import avatar from "/assets/avatar.svg";
 
 export default function Profile() {
   const userName = useSelector((state) => state.user.userName);

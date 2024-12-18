@@ -1,6 +1,6 @@
 import React from "react";
 import CreateUsername from "../features/user/CreateUsername";
-import logo from "../assets/Logo.svg";
+import logo from "/assets/Logo.svg";
 import { useSelector } from "react-redux";
 import Button from "../ui/Button";
 import { useNavigate } from "react-router-dom";

@@ -4,7 +4,7 @@ import { Outlet } from "react-router-dom";
 import CartOverview from "../features/cart/CartOverview";
 import { useSelector } from "react-redux";
 import CreateUsername from "../features/user/CreateUsername";
-import logo from "../assets/Logo.svg";
+import logo from "/assets/Logo.svg";
 
 export default function AppLayout() {
   const username = useSelector((state) => state.user.userName);
