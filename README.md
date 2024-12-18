@@ -1,8 +1,17 @@
-# React + Vite
+# Electro-Shop
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Electro-Shop is a modern e-commerce web application built with React. The app allows users to browse products, manage their cart, and place orders.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Responsive design for mobile and desktop.
+- Fetches product and order data from a GitHub-hosted API.
+- User authentication and profile management.
+- Cart and order management.
+
+## Technologies Used
+
+- **React**: Component-based frontend library.
+- **Redux**: State management.
+- **Tailwind CSS**: Styling framework.
+- **Font Awesome**: Icons.
