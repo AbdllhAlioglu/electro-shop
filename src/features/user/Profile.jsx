@@ -1,6 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import avatar from "/assets/avatar.svg";
+import Button from "../../ui/Button";
 
 export default function Profile() {
   const userName = useSelector((state) => state.user.userName);
@@ -12,7 +13,6 @@ export default function Profile() {
       </h1>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Profil Bilgileri */}
         <div className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-600">
@@ -25,7 +25,7 @@ export default function Profile() {
             <label className="block text-sm font-medium text-gray-600">
               Email
             </label>
-            <p className="text-lg text-gray-800">johndoe@example.com</p>
+            <p className="text-lg text-gray-800">aliogluuabdullah@gmail.com</p>
           </div>
 
           <div>
@@ -39,13 +39,10 @@ export default function Profile() {
             <label className="block text-sm font-medium text-gray-600">
               Address
             </label>
-            <p className="text-lg text-gray-800">
-              123 Main St, Springfield, IL
-            </p>
+            <p className="text-lg text-gray-800">Istanbul</p>
           </div>
         </div>
 
-        {/* Profil Fotoğrafı */}
         <div className="flex justify-center items-center">
           <img
             src={avatar}
@@ -55,11 +52,8 @@ export default function Profile() {
         </div>
       </div>
 
-      {/* Düzenle Butonu */}
       <div className="flex justify-center mt-8">
-        <button className="px-6 py-2 text-white bg-customGreen-500 rounded-lg hover:bg-customGreen-600 focus:outline-none focus:ring-2 focus:ring-customGreen-500 focus:ring-opacity-50">
-          Edit
-        </button>
+        <Button type="small">Edit</Button>
       </div>
     </div>
   );

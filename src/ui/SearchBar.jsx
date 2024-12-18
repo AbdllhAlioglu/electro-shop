@@ -6,7 +6,7 @@ export default function SearchBar({ onSearch }) {
   const handleChange = (e) => {
     const value = e.target.value;
     setSearchTerm(value);
-    onSearch(value); // Arama terimini üst bileşene ilet
+    onSearch(value);
   };
 
   return (

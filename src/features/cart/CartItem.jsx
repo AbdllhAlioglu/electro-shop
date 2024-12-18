@@ -6,9 +6,11 @@ import { increaseItemQuantity } from "./cartSlice";
 import { decreaseItemQuantity } from "./cartSlice";
 import React from "react";
 
-function CartItem({ item }) {
+function CartItem({ item, discount }) {
   const { id, name, quantity, totalPrice, image } = item;
   const dispatch = useDispatch();
+
+  const discountedPrice = totalPrice * (1 - discount / 100);
 
   const handleDeleteItem = () => {
     dispatch(removeFromCart(id));
@@ -37,7 +39,7 @@ function CartItem({ item }) {
         {quantity}&times; {name}
       </p>
       <div className="flex items-center justify-between sm:gap-6">
-        <p className="text-sm font-bold">{formatCurrency(totalPrice)}</p>
+        <p className="text-sm font-bold">{formatCurrency(discountedPrice)}</p>
         <Button type="small" onClick={handleIncreaseItem}>
           +
         </Button>

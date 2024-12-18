@@ -1,11 +1,10 @@
 import React from "react";
 import { Form, redirect, useActionData, useNavigation } from "react-router-dom";
-import { createOrder } from "../../services/productService"; // createOrder fonksiyonu
-import Button from "../../ui/Button"; // Button bileşeni
+import { createOrder } from "../../services/productService";
+import Button from "../../ui/Button";
 import { useSelector } from "react-redux";
-import { getCart } from "../cart/cartSlice"; // Redux'taki cart selector
+import { getCart } from "../cart/cartSlice";
 
-// Telefon numarası doğrulama regex
 const isValidPhone = (str) =>
   /^\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}$/.test(
     str
@@ -24,7 +23,6 @@ function OrderForm() {
     <div className="px-4 py-6">
       <h2 className="mb-8 text-xl font-semibold">Ready to order? Let’s go!</h2>
 
-      {/* React Router Form */}
       <Form method="POST">
         <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center">
           <label className="sm:basis-40">First Name</label>
@@ -74,7 +72,6 @@ function OrderForm() {
         </div>
 
         <div>
-          {/* Redux'tan gelen cart bilgisini gizli input ile gönderiyoruz */}
           <input type="hidden" name="cart" value={JSON.stringify(cart)} />
           <Button disabled={isSubmitting} type="primary">
             {isSubmitting ? "Placing order..." : "Order Now"}
@@ -89,7 +86,6 @@ export async function action({ request }) {
   const formData = await request.formData();
   const data = Object.fromEntries(formData);
 
-  // Sipariş nesnesini oluştur
   const order = {
     ...data,
     cart: JSON.parse(data.cart),
@@ -98,7 +94,6 @@ export async function action({ request }) {
 
   console.log(order);
 
-  // Hataları kontrol et
   const errors = {};
   if (!isValidPhone(order.phone))
     errors.phone =
@@ -106,7 +101,6 @@ export async function action({ request }) {
 
   if (Object.keys(errors).length > 0) return errors;
 
-  // Eğer hata yoksa, siparişi oluştur
   try {
     const newOrder = await createOrder(order); // API çağrısı
     return redirect(`/order/${newOrder.id}`); // Başarılıysa yönlendir

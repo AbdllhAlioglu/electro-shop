@@ -10,11 +10,7 @@
       "stock": 120,
       "description": "Energy-efficient LED bulb with 800 lumens.",
       "power": "8W",
-      "features": [
-        "Long lifespan",
-        "Warm white light",
-        "Energy-saving"
-      ],
+      "features": ["Long lifespan", "Warm white light", "Energy-saving"],
       "image": "/assets/LED-Light-Bulb.png"
     },
     {
@@ -44,11 +40,7 @@
       "stock": 200,
       "description": "Compact 10,000mAh power bank with fast charging.",
       "power": "10,000mAh",
-      "features": [
-        "Fast charging",
-        "Lightweight",
-        "Dual USB ports"
-      ],
+      "features": ["Fast charging", "Lightweight", "Dual USB ports"],
       "image": "/assets/Powerbank.png"
     },
     {
@@ -61,11 +53,7 @@
       "stock": 75,
       "description": "Stainless steel electric kettle with 1.5L capacity.",
       "power": "1500W",
-      "features": [
-        "Auto shut-off",
-        "Boil-dry protection",
-        "Ergonomic design"
-      ],
+      "features": ["Auto shut-off", "Boil-dry protection", "Ergonomic design"],
       "image": "/assets/Kattle.png"
     },
     {
@@ -78,11 +66,7 @@
       "stock": 30,
       "description": "Energy-efficient ceiling fan with remote control.",
       "power": "70W",
-      "features": [
-        "Three speed settings",
-        "LED light",
-        "Silent operation"
-      ],
+      "features": ["Three speed settings", "LED light", "Silent operation"],
       "image": "/assets/Fan.png"
     },
     {
@@ -95,11 +79,7 @@
       "stock": 90,
       "description": "Adjustable desk lamp with USB charging port.",
       "power": "10W",
-      "features": [
-        "Adjustable brightness",
-        "Flexible neck",
-        "Touch control"
-      ],
+      "features": ["Adjustable brightness", "Flexible neck", "Touch control"],
       "image": "/assets/USB-Desk-Lamp.png"
     },
     {
@@ -112,11 +92,7 @@
       "stock": 50,
       "description": "Cordless drill with variable speed control.",
       "power": "18V",
-      "features": [
-        "Rechargeable battery",
-        "LED light",
-        "Ergonomic handle"
-      ],
+      "features": ["Rechargeable battery", "LED light", "Ergonomic handle"],
       "image": "/assets/Electric-Drill.png"
     },
     {
@@ -129,11 +105,7 @@
       "stock": 110,
       "description": "Powerful hair dryer with ionic technology.",
       "power": "1800W",
-      "features": [
-        "Three heat settings",
-        "Cool shot button",
-        "Lightweight"
-      ],
+      "features": ["Three heat settings", "Cool shot button", "Lightweight"],
       "image": "/assets/Hair-Dryer.png"
     },
     {
@@ -168,7 +140,7 @@
         "Water-resistant",
         "Multiple brightness modes"
       ],
-      "image": "/assets/LED-Lantern.png"
+      "image": "/assets/Led-Lantern.png"
     },
     {
       "id": 11,
@@ -197,11 +169,7 @@
       "stock": 70,
       "description": "High-definition wireless security camera with night vision.",
       "power": "12V",
-      "features": [
-        "Motion detection",
-        "Cloud storage",
-        "Wide-angle lens"
-      ],
+      "features": ["Motion detection", "Cloud storage", "Wide-angle lens"],
       "image": "/assets/SecurityCamera.png"
     },
     {
@@ -214,11 +182,7 @@
       "stock": 100,
       "description": "Set of 8 solar-powered LED garden lights.",
       "power": "Solar",
-      "features": [
-        "Weatherproof",
-        "Auto on/off",
-        "Energy-efficient"
-      ],
+      "features": ["Weatherproof", "Auto on/off", "Energy-efficient"],
       "image": "/assets/SolarGardenLights.png"
     },
     {
@@ -248,11 +212,7 @@
       "stock": 35,
       "description": "Smart door lock with fingerprint and app access.",
       "power": "Battery-operated",
-      "features": [
-        "Auto lock",
-        "Remote access",
-        "Tamper alarm"
-      ],
+      "features": ["Auto lock", "Remote access", "Tamper alarm"],
       "image": "/assets/SmartDoorLock.png"
     },
     {
@@ -265,11 +225,7 @@
       "stock": 150,
       "description": "Flexible LED strip lights with multiple color modes.",
       "power": "12V",
-      "features": [
-        "Remote control",
-        "DIY installation",
-        "Long-lasting"
-      ],
+      "features": ["Remote control", "DIY installation", "Long-lasting"],
       "image": "/assets/StripLight.png"
     },
     {
@@ -299,11 +255,7 @@
       "stock": 80,
       "description": "Rechargeable portable blender for smoothies and shakes.",
       "power": "Rechargeable",
-      "features": [
-        "Compact design",
-        "Easy to clean",
-        "USB charging"
-      ],
+      "features": ["Compact design", "Easy to clean", "USB charging"],
       "image": "/assets/Blender.png"
     },
     {
@@ -316,11 +268,7 @@
       "stock": 65,
       "description": "Compact electric screwdriver with multiple bits.",
       "power": "Rechargeable",
-      "features": [
-        "Lightweight",
-        "LED light",
-        "Magnetic tip"
-      ],
+      "features": ["Lightweight", "LED light", "Magnetic tip"],
       "image": "/assets/ElectircScrewdriver.png"
     },
     {
@@ -333,39 +281,9 @@
       "stock": 50,
       "description": "2-slice electric toaster with browning control.",
       "power": "800W",
-      "features": [
-        "Defrost mode",
-        "Removable crumb tray",
-        "Compact design"
-      ],
+      "features": ["Defrost mode", "Removable crumb tray", "Compact design"],
       "image": "/assets/ElectricToaster.png"
     }
   ],
-  "orders": [
-    {
-      "id": "eb45",
-      "customer": "asdasdasdas",
-      "phone": "43534",
-      "address": "asdasdas",
-      "cart": [
-        {
-          "id": 1,
-          "name": "LED Light Bulb",
-          "price": 5.99,
-          "image": "/assets/LED-Light-Bulb.png",
-          "quantity": 1,
-          "totalPrice": 5.99
-        },
-        {
-          "id": 2,
-          "name": "Smart Plug",
-          "price": 19.99,
-          "image": "/assets/WIFI_Plug.jpg",
-          "quantity": 1,
-          "totalPrice": 19.99
-        }
-      ],
-      "priority": false
-    }
-  ]
+  "orders": []
 }

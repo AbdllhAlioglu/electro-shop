@@ -1,5 +1,3 @@
-// src/components/SortMenu.js
-
 import React from "react";
 
 export default function SortMenu({ onSortChange }) {

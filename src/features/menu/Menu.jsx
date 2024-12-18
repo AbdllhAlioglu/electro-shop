@@ -12,12 +12,10 @@ export default function Menu() {
   const [searchTerm, setSearchTerm] = useState(""); // Arama terimini tutar
   const [filteredMenu, setFilteredMenu] = useState(menu); // Arama sonuçlarını tutan state
 
-  // Arama terimi değiştiğinde çağrılır
   const handleSearch = (searchTerm) => {
     setSearchTerm(searchTerm);
   };
 
-  // Sıralama değiştiğinde çağrılır
   const handleSortChange = (sortOption) => {
     const sorted = [...menu].sort((a, b) => {
       if (sortOption === "asc") {
@@ -45,10 +43,9 @@ export default function Menu() {
     setSortedMenu(sorted);
   };
 
-  // Arama ve sıralama işlemlerini izlemek için useEffect
   useEffect(() => {
-    const filtered = sortedMenu.filter(
-      (product) => product.name.toLowerCase().includes(searchTerm.toLowerCase()) // Arama terimine göre filtrele
+    const filtered = sortedMenu.filter((product) =>
+      product.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setFilteredMenu(filtered);
   }, [searchTerm, sortedMenu]); // searchTerm veya sortedMenu değiştiğinde tetiklenir
@@ -60,7 +57,6 @@ export default function Menu() {
         <SortMenu onSortChange={handleSortChange} />
       </div>
 
-      {/* Eğer filteredMenu boşsa, NotFoundProduct bileşenini göster */}
       {filteredMenu.length === 0 ? (
         <NotFoundProduct />
       ) : (

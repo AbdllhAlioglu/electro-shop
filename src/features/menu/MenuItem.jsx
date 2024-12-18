@@ -59,13 +59,12 @@ export default function MenuItem({ product }) {
     }
   }, [showCartNotification]);
 
-  // Handle the disappearance of like notification
   useEffect(() => {
     if (showLikeNotification) {
       const timeout = setTimeout(() => {
         setShowLikeNotification(false);
-      }, 1000); // 1 saniye sonra kaybolur
-      return () => clearTimeout(timeout); // Temizlik işlemi
+      }, 1000);
+      return () => clearTimeout(timeout);
     }
   }, [showLikeNotification]);
 
@@ -86,7 +85,6 @@ export default function MenuItem({ product }) {
         <h2 className="text-lg font-bold text-gray-800 truncate">{name}</h2>
         <p className="text-sm text-gray-600 italic">{description}</p>
 
-        {/* Features List */}
         {features && features.length > 0 && (
           <ul className="text-sm text-gray-700">
             {features.map((feature, index) => (
@@ -124,7 +122,6 @@ export default function MenuItem({ product }) {
         </div>
       </div>
 
-      {/* Like Notification Animation */}
       {showLikeNotification && (
         <div className="absolute top-6 left-2 bg-customGreen-500 text-white p-2 rounded-lg shadow-lg animate-fade-right animate-once animate-duration-1000 animate-ease-linear">
           {isLiked ? "Favorilere eklendi!" : "Favorilerden çıkarıldı!"}

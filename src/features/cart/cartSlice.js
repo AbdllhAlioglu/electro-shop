@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   cart: [],
+  discount: 0,
 };
 const cartSlice = createSlice({
   name: "cart",
@@ -61,6 +62,9 @@ const cartSlice = createSlice({
     clearCart(state) {
       state.cart = [];
     },
+    applyDiscount(state, action) {
+      state.discount = action.payload; // İndirim yüzdesini güncelle
+    },
   },
 });
 
@@ -74,6 +78,7 @@ export const {
   increaseItemQuantity,
   decreaseItemQuantity,
   clearCart,
+  applyDiscount,
 } = cartSlice.actions;
 
 export default cartSlice.reducer;

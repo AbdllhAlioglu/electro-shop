@@ -1,11 +1,14 @@
 // services/productService.js
 
-import store from "../store"; // Redux store'unuzu içe aktarın
+import store from "../store";
 import { clearCart } from "../features/cart/cartSlice";
+
+const API_URL =
+  "https://raw.githubusercontent.com/AbdllhAlioglu/electro-data/refs/heads/main/db.json";
 
 export const getMenu = async () => {
   try {
-    const response = await fetch("http://localhost:3001/products");
+    const response = await fetch(`${API_URL}/products`);
     const data = await response.json();
     return data;
   } catch (error) {
@@ -13,8 +16,6 @@ export const getMenu = async () => {
     return [];
   }
 };
-
-const API_URL = "http://localhost:3001"; // API URL'yi projeye göre değiştirin
 
 export async function getOrder(orderId) {
   const res = await fetch(`${API_URL}/orders/${orderId}`);
