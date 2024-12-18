@@ -4,7 +4,7 @@ import store from "../store";
 import { clearCart } from "../features/cart/cartSlice";
 
 const API_URL =
-  "https://raw.githubusercontent.com/AbdllhAlioglu/electro-data/refs/heads/main/db.json";
+  "https://raw.githubusercontent.com/AbdllhAlioglu/electro-data/main/db.json";
 
 export const getMenu = async () => {
   try {
