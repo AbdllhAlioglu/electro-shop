@@ -16,6 +16,10 @@ function Cart() {
   const [coupon, setCoupon] = useState("");
   const [isCouponApplied, setIsCouponApplied] = useState(false);
 
+  const totalCartPrice = useSelector((state) =>
+    state.cart.cart.reduce((acc, item) => acc + item.totalPrice, 0)
+  );
+
   const handleClearCart = () => {
     dispatch(clearCart());
   };
@@ -45,12 +49,21 @@ function Cart() {
         ))}
       </ul>
 
+      <div className="mt-6 flex justify-between items-center">
+        <p className="text-lg font-semibold">Total: ${totalCartPrice}</p>
+        {discount > 0 && (
+          <p className="text-sm text-customGreen-300 underline font-bold">
+            Discount: %{discount}
+          </p>
+        )}
+      </div>
+
       <div className="mt-6 flex flex-col items-end gap-4">
         <input
           type="text"
           value={coupon}
           onChange={(e) => setCoupon(e.target.value)}
-          placeholder="Enter coupon code"
+          placeholder={isCouponApplied ? "Coupon applied" : "Coupon code"}
           disabled={isCouponApplied}
           className="border p-2 rounded input"
         />

@@ -19,8 +19,11 @@ function CreateUser() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col items-center">
-      <p className="mb-4 text-sm text-stone-600 md:text-base">
+    <form
+      onSubmit={handleSubmit}
+      className="flex flex-col items-center px-4 sm:px-8 md:px-16"
+    >
+      <p className="mb-4 text-sm text-stone-600 sm:text-base md:text-lg ">
         👋 Welcome! Please start by telling us your name:
       </p>
 
@@ -29,7 +32,7 @@ function CreateUser() {
         placeholder="Your full name"
         value={username}
         onChange={(e) => setUsername(e.target.value)}
-        className="input mb-8 w-72"
+        className="input mb-8 w-full sm:w-72 md:w-96 lg:w-1/3"
       />
 
       {username !== "" && (

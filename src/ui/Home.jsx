@@ -14,22 +14,30 @@ export default function Home() {
   }
 
   return (
-    <div>
+    <div className="flex items-center justify-center min-h-screen px-4 sm:px-8 md:px-16">
       {!username ? (
-        <div className="flex items-center min-h-screen flex-col ">
-          <h1 className="text-4xl font-bold text-gray-700 mt-24">
+        <div className="flex flex-col items-center text-center">
+          <h1 className="text-3xl sm:text-4xl font-bold text-gray-700 mt-16 sm:mt-24">
             Welcome to Electro-Shop!
           </h1>
-          <img src={logo} alt="Electro-Shop Logo" className="w-64 h-64" />
+          <img
+            src={logo}
+            alt="Electro-Shop Logo"
+            className="w-48 h-48 sm:w-64 sm:h-64 mt-8"
+          />
           <CreateUsername />
         </div>
       ) : (
-        <div className="flex items-center min-h-screen flex-col ">
-          <h1 className="text-4xl font-bold text-gray-700 mt-24">
+        <div className="flex flex-col items-center text-center">
+          <h1 className="text-3xl sm:text-4xl font-bold text-gray-700 mt-16 sm:mt-24">
             Welcome back, {username}!
           </h1>
-          <img src={logo} alt="Electro-Shop Logo" className="w-64 h-64" />
-          <Button type="primary" onClick={handleClick}>
+          <img
+            src={logo}
+            alt="Electro-Shop Logo"
+            className="w-48 h-48 sm:w-64 sm:h-64 mt-8"
+          />
+          <Button type="primary" onClick={handleClick} className="mt-8">
             Continue ordering
           </Button>
         </div>
@@ -37,9 +45,3 @@ export default function Home() {
     </div>
   );
 }
-
-/* <h1 className="text-4xl font-bold text-gray-700 mt-24">
-        Welcome to Electro-Shop!
-      </h1>
-      <img src={logo} alt="Electro-Shop Logo" className="w-64 h-64" />
-      <CreateUsername />  */

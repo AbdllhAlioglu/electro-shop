@@ -32,6 +32,7 @@ export default function Header() {
         <span>Electro-Shop</span>
       </Link>
 
+      {/* Mobile menu toggle button */}
       <button
         onClick={toggleMobileMenu}
         className="text-gray-200 text-2xl md:hidden"
@@ -39,6 +40,7 @@ export default function Header() {
         {isMobileMenuOpen ? <FaTimes /> : <FaBars />}
       </button>
 
+      {/* Navigation menu */}
       <nav
         className={`${
           isMobileMenuOpen ? "flex" : "hidden"
