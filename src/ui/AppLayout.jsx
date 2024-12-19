@@ -12,7 +12,7 @@ export default function AppLayout() {
 
   if (!username) {
     return (
-      <div className="grid h-screen grid-rows-[auto_1fr_auto]">
+      <div className="grid h-screen grid-rows-[auto_1fr_auto] overflow-x-hidden">
         <Header />
         <div className="overflow-x-hidden overflow-y-auto bg-gray-200">
           <main className="mx-4 sm:mx-8 md:mx-16 max-w-full">
@@ -34,7 +34,7 @@ export default function AppLayout() {
   }
 
   return (
-    <div className="grid h-screen grid-rows-[auto_1fr_auto]">
+    <div className="grid h-screen grid-rows-[auto_1fr_auto] overflow-x-hidden">
       <Header />
       <div className="overflow-x-hidden overflow-y-auto bg-gray-200">
         <main className="mx-4 sm:mx-8 md:mx-16 max-w-full">
