@@ -1,7 +1,7 @@
 {
   "products": [
     {
-      "id": 1,
+      "id": "1",
       "name": "LED Light Bulb",
       "category": "Lighting",
       "price": 5.99,
@@ -10,11 +10,15 @@
       "stock": 120,
       "description": "Energy-efficient LED bulb with 800 lumens.",
       "power": "8W",
-      "features": ["Long lifespan", "Warm white light", "Energy-saving"],
+      "features": [
+        "Long lifespan",
+        "Warm white light",
+        "Energy-saving"
+      ],
       "image": "/assets/LED-Light-Bulb.png"
     },
     {
-      "id": 2,
+      "id": "2",
       "name": "Smart Plug",
       "category": "Smart Home",
       "price": 19.99,
@@ -31,7 +35,7 @@
       "image": "/assets/WIFI_Plug.jpg"
     },
     {
-      "id": 3,
+      "id": "3",
       "name": "Portable Power Bank",
       "category": "Charging",
       "price": 29.99,
@@ -40,11 +44,15 @@
       "stock": 200,
       "description": "Compact 10,000mAh power bank with fast charging.",
       "power": "10,000mAh",
-      "features": ["Fast charging", "Lightweight", "Dual USB ports"],
+      "features": [
+        "Fast charging",
+        "Lightweight",
+        "Dual USB ports"
+      ],
       "image": "/assets/Powerbank.png"
     },
     {
-      "id": 4,
+      "id": "4",
       "name": "Electric Kettle",
       "category": "Appliances",
       "price": 24.99,
@@ -53,11 +61,15 @@
       "stock": 75,
       "description": "Stainless steel electric kettle with 1.5L capacity.",
       "power": "1500W",
-      "features": ["Auto shut-off", "Boil-dry protection", "Ergonomic design"],
+      "features": [
+        "Auto shut-off",
+        "Boil-dry protection",
+        "Ergonomic design"
+      ],
       "image": "/assets/Kattle.png"
     },
     {
-      "id": 5,
+      "id": "5",
       "name": "Ceiling Fan",
       "category": "Cooling",
       "price": 89.99,
@@ -66,11 +78,15 @@
       "stock": 30,
       "description": "Energy-efficient ceiling fan with remote control.",
       "power": "70W",
-      "features": ["Three speed settings", "LED light", "Silent operation"],
+      "features": [
+        "Three speed settings",
+        "LED light",
+        "Silent operation"
+      ],
       "image": "/assets/Fan.png"
     },
     {
-      "id": 6,
+      "id": "6",
       "name": "USB Desk Lamp",
       "category": "Lighting",
       "price": 15.49,
@@ -79,11 +95,15 @@
       "stock": 90,
       "description": "Adjustable desk lamp with USB charging port.",
       "power": "10W",
-      "features": ["Adjustable brightness", "Flexible neck", "Touch control"],
+      "features": [
+        "Adjustable brightness",
+        "Flexible neck",
+        "Touch control"
+      ],
       "image": "/assets/USB-Desk-Lamp.png"
     },
     {
-      "id": 7,
+      "id": "7",
       "name": "Electric Drill",
       "category": "Tools",
       "price": 49.99,
@@ -92,11 +112,15 @@
       "stock": 50,
       "description": "Cordless drill with variable speed control.",
       "power": "18V",
-      "features": ["Rechargeable battery", "LED light", "Ergonomic handle"],
+      "features": [
+        "Rechargeable battery",
+        "LED light",
+        "Ergonomic handle"
+      ],
       "image": "/assets/Electric-Drill.png"
     },
     {
-      "id": 8,
+      "id": "8",
       "name": "Hair Dryer",
       "category": "Personal Care",
       "price": 39.99,
@@ -105,11 +129,15 @@
       "stock": 110,
       "description": "Powerful hair dryer with ionic technology.",
       "power": "1800W",
-      "features": ["Three heat settings", "Cool shot button", "Lightweight"],
+      "features": [
+        "Three heat settings",
+        "Cool shot button",
+        "Lightweight"
+      ],
       "image": "/assets/Hair-Dryer.png"
     },
     {
-      "id": 9,
+      "id": "9",
       "name": "Electric Heater",
       "category": "Heating",
       "price": 59.99,
@@ -126,7 +154,7 @@
       "image": "/assets/Electirc-Heater.png"
     },
     {
-      "id": 10,
+      "id": "10",
       "name": "Rechargeable LED Lantern",
       "category": "Lighting",
       "price": 22.99,
@@ -143,7 +171,7 @@
       "image": "/assets/Led-Lantern.png"
     },
     {
-      "id": 11,
+      "id": "11",
       "name": "Smart Thermostat",
       "category": "Smart Home",
       "price": 129.99,
@@ -160,7 +188,7 @@
       "image": "/assets/Smart-Thermostat.png"
     },
     {
-      "id": 12,
+      "id": "12",
       "name": "Wireless Security Camera",
       "category": "Smart Home",
       "price": 59.99,
@@ -169,11 +197,15 @@
       "stock": 70,
       "description": "High-definition wireless security camera with night vision.",
       "power": "12V",
-      "features": ["Motion detection", "Cloud storage", "Wide-angle lens"],
+      "features": [
+        "Motion detection",
+        "Cloud storage",
+        "Wide-angle lens"
+      ],
       "image": "/assets/SecurityCamera.png"
     },
     {
-      "id": 13,
+      "id": "13",
       "name": "Solar Garden Lights",
       "category": "Lighting",
       "price": 29.99,
@@ -182,11 +214,15 @@
       "stock": 100,
       "description": "Set of 8 solar-powered LED garden lights.",
       "power": "Solar",
-      "features": ["Weatherproof", "Auto on/off", "Energy-efficient"],
+      "features": [
+        "Weatherproof",
+        "Auto on/off",
+        "Energy-efficient"
+      ],
       "image": "/assets/SolarGardenLights.png"
     },
     {
-      "id": 14,
+      "id": "14",
       "name": "Robot Vacuum Cleaner",
       "category": "Appliances",
       "price": 299.99,
@@ -203,7 +239,7 @@
       "image": "/assets/VaccumCleaner.png"
     },
     {
-      "id": 15,
+      "id": "15",
       "name": "Smart Door Lock",
       "category": "Smart Home",
       "price": 149.99,
@@ -212,11 +248,15 @@
       "stock": 35,
       "description": "Smart door lock with fingerprint and app access.",
       "power": "Battery-operated",
-      "features": ["Auto lock", "Remote access", "Tamper alarm"],
+      "features": [
+        "Auto lock",
+        "Remote access",
+        "Tamper alarm"
+      ],
       "image": "/assets/SmartDoorLock.png"
     },
     {
-      "id": 16,
+      "id": "16",
       "name": "LED Strip Lights",
       "category": "Lighting",
       "price": 19.99,
@@ -225,11 +265,15 @@
       "stock": 150,
       "description": "Flexible LED strip lights with multiple color modes.",
       "power": "12V",
-      "features": ["Remote control", "DIY installation", "Long-lasting"],
+      "features": [
+        "Remote control",
+        "DIY installation",
+        "Long-lasting"
+      ],
       "image": "/assets/StripLight.png"
     },
     {
-      "id": 17,
+      "id": "17",
       "name": "Cordless Vacuum Cleaner",
       "category": "Appliances",
       "price": 199.99,
@@ -246,7 +290,7 @@
       "image": "/assets/CordlessVaccum.png"
     },
     {
-      "id": 18,
+      "id": "18",
       "name": "Portable Blender",
       "category": "Appliances",
       "price": 34.99,
@@ -255,11 +299,15 @@
       "stock": 80,
       "description": "Rechargeable portable blender for smoothies and shakes.",
       "power": "Rechargeable",
-      "features": ["Compact design", "Easy to clean", "USB charging"],
+      "features": [
+        "Compact design",
+        "Easy to clean",
+        "USB charging"
+      ],
       "image": "/assets/Blender.png"
     },
     {
-      "id": 19,
+      "id": "19",
       "name": "Electric Screwdriver",
       "category": "Tools",
       "price": 39.99,
@@ -268,11 +316,15 @@
       "stock": 65,
       "description": "Compact electric screwdriver with multiple bits.",
       "power": "Rechargeable",
-      "features": ["Lightweight", "LED light", "Magnetic tip"],
+      "features": [
+        "Lightweight",
+        "LED light",
+        "Magnetic tip"
+      ],
       "image": "/assets/ElectircScrewdriver.png"
     },
     {
-      "id": 20,
+      "id": "20",
       "name": "Electric Toaster",
       "category": "Appliances",
       "price": 49.99,
@@ -281,9 +333,39 @@
       "stock": 50,
       "description": "2-slice electric toaster with browning control.",
       "power": "800W",
-      "features": ["Defrost mode", "Removable crumb tray", "Compact design"],
+      "features": [
+        "Defrost mode",
+        "Removable crumb tray",
+        "Compact design"
+      ],
       "image": "/assets/ElectricToaster.png"
     }
   ],
-  "orders": []
+  "orders": [
+    {
+      "id": "e6f6",
+      "customer": "hüseyin",
+      "phone": "23423423",
+      "address": "asdasdas",
+      "cart": [
+        {
+          "id": 2,
+          "name": "Smart Plug",
+          "price": 19.99,
+          "image": "/assets/WIFI_Plug.jpg",
+          "quantity": 2,
+          "totalPrice": 39.98
+        },
+        {
+          "id": 3,
+          "name": "Portable Power Bank",
+          "price": 29.99,
+          "image": "/assets/Powerbank.png",
+          "quantity": 1,
+          "totalPrice": 29.99
+        }
+      ],
+      "priority": false
+    }
+  ]
 }

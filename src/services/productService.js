@@ -21,7 +21,7 @@ export const getMenu = async () => {
 // Get order by orderId
 export async function getOrder(orderId) {
   try {
-    const res = await fetch(`${API_URL}/orders/${orderId}`);
+    const res = await fetch(`http://localhost:3001/orders/${orderId}`);
     if (!res.ok) throw new Error(`Couldn't find order #${orderId}`);
     const data = await res.json();
     return data; // Return the entire order data
@@ -34,7 +34,7 @@ export async function getOrder(orderId) {
 // Create a new order
 export async function createOrder(newOrder) {
   try {
-    const res = await fetch(`${API_URL}/orders`, {
+    const res = await fetch(`http://localhost:3001/orders`, {
       method: "POST",
       body: JSON.stringify(newOrder),
       headers: {
