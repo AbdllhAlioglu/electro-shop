@@ -10,7 +10,7 @@ export default function SearchBar({ onSearch }) {
   };
 
   return (
-    <div>
+    <div className="w-1/2">
       <input
         type="text"
         value={searchTerm}

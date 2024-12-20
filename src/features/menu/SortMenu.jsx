@@ -6,7 +6,7 @@ export default function SortMenu({ onSortChange }) {
   };
 
   return (
-    <div className="mb-6 flex justify-end">
+    <div className="flex justify-end w-1/2">
       <select
         onChange={handleSortChange}
         className="p-2 border rounded-md text-gray-700"

@@ -52,7 +52,7 @@ export default function Menu() {
 
   return (
     <div className="px-4 py-6 h-screen">
-      <div className="flex justify-around items-center mb-6 space-x-4">
+      <div className="flex  items-center w-full p-[30px]">
         <SearchBar onSearch={handleSearch} />
         <SortMenu onSortChange={handleSortChange} />
       </div>
