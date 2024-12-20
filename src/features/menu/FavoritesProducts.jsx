@@ -1,7 +1,7 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { removeFromFavorites } from "../menu/favoritesSlice"; // Favori kaldırma işlemi için action
-import { products } from "../../../db.json";
+import { products } from "../../../public/db.json";
 import Button from "../../ui/Button";
 import NotFoundFavorite from "./NotFoundFavorite";
 import { formatCurrency } from "../../utils/helpers";

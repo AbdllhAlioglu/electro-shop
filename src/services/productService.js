@@ -3,8 +3,7 @@
 import store from "../store";
 import { clearCart } from "../features/cart/cartSlice";
 
-const API_URL =
-  "https://raw.githubusercontent.com/AbdllhAlioglu/electro-data/main/db.json";
+const API_URL = "db.json"; // URL to the JSON file containing the products
 
 // Get menu (products)
 export const getMenu = async () => {

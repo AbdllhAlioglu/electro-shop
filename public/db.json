@@ -366,6 +366,23 @@
         }
       ],
       "priority": false
+    },
+    {
+      "id": "ad93",
+      "customer": "asasxaxa",
+      "phone": "234342342",
+      "address": "asdsadasdasdsadsa",
+      "cart": [
+        {
+          "id": 2,
+          "name": "Smart Plug",
+          "price": 19.99,
+          "image": "/assets/WIFI_Plug.jpg",
+          "quantity": 2,
+          "totalPrice": 39.98
+        }
+      ],
+      "priority": false
     }
   ]
 }
