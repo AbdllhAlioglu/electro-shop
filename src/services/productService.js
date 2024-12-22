@@ -45,11 +45,12 @@ export async function createOrder(newOrder) {
     const data = await res.json();
 
     // Dispatch action to clear cart after order creation
-    store.dispatch(clearCart());
-
-    return data; // Return the newly created order data
+    return data;
+    // Return the newly created order data
   } catch (error) {
     console.error("Error creating order:", error);
     throw new Error("Failed creating your order");
+  } finally {
+    store.dispatch(clearCart());
   }
 }

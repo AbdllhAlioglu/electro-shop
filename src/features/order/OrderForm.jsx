@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { Form, redirect, useActionData, useNavigation } from "react-router-dom";
 import { createOrder } from "../../services/productService";
 import Button from "../../ui/Button";
 import { useSelector } from "react-redux";
 import { getCart } from "../cart/cartSlice";
+import { getAddress } from "../../services/adressService";
 
 const isValidPhone = (str) =>
   /^\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}$/.test(
@@ -11,13 +12,42 @@ const isValidPhone = (str) =>
   );
 
 function OrderForm() {
+  const [address, setAddress] = useState("");
+  const [isFetchingAddress, setIsFetchingAddress] = useState(false);
+
   const userName = useSelector((state) => state.user.userName);
   const cart = useSelector(getCart);
-
   const navigation = useNavigation();
   const isSubmitting = navigation.state === "submitting";
-
   const formErrors = useActionData();
+
+  const handleGetLocation = async () => {
+    if (!navigator.geolocation) {
+      alert("Geolocation is not supported by your browser.");
+      return;
+    }
+
+    setIsFetchingAddress(true);
+
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        try {
+          const { latitude, longitude } = position.coords;
+          const data = await getAddress({ latitude, longitude });
+          setAddress(data.locality || data.city || "Address not found");
+        } catch (error) {
+          console.error("Error fetching address:", error);
+          alert("Failed to fetch your address. Please try again.");
+        } finally {
+          setIsFetchingAddress(false);
+        }
+      },
+      () => {
+        alert("Failed to get your location.");
+        setIsFetchingAddress(false);
+      }
+    );
+  };
 
   return (
     <div className="px-4 py-6">
@@ -50,12 +80,24 @@ function OrderForm() {
         <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center">
           <label className="sm:basis-40">Address</label>
           <div className="grow">
-            <input
-              className="input w-full"
-              type="text"
-              name="address"
-              required
-            />
+            <div className="relative w-full">
+              <input
+                className="input w-full pr-32 sm:pr-36 md:pr-40 lg:pr-44"
+                type="text"
+                name="address"
+                required
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+              />
+              <button
+                type="button"
+                onClick={handleGetLocation}
+                className="absolute right-4 sm:right-6 top-1/2 transform -translate-y-1/2 bg-customGreen-200 px-2 py-1 sm:px-4 sm:py-2 text-sm sm:text-base lg:text-lg text-white hover:customGreen-300 focus:outline-none focus:ring focus:ring-customGreen-200 focus:ring-offset-2 rounded-full w-1/4 sm:w-1/5 lg:w-1/6"
+                disabled={isFetchingAddress}
+              >
+                {isFetchingAddress ? "Fetching..." : "Locate"}
+              </button>
+            </div>
           </div>
         </div>
 
@@ -89,10 +131,8 @@ export async function action({ request }) {
   const order = {
     ...data,
     cart: JSON.parse(data.cart),
-    priority: data.priority === "on", // Checkbox kontrolü
+    priority: data.priority === "on",
   };
-
-  console.log(order);
 
   const errors = {};
   if (!isValidPhone(order.phone))
@@ -102,8 +142,8 @@ export async function action({ request }) {
   if (Object.keys(errors).length > 0) return errors;
 
   try {
-    const newOrder = await createOrder(order); // API çağrısı
-    return redirect(`/order/${newOrder.id}`); // Başarılıysa yönlendir
+    const newOrder = await createOrder(order);
+    return redirect(`/order/${newOrder.id}`);
   } catch (err) {
     console.error("Order creation failed:", err);
     return { error: "Order creation failed. Please try again." };

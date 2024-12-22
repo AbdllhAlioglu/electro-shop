@@ -6,19 +6,20 @@ import Button from "../../ui/Button";
 import CartItem from "./CartItem";
 import EmptyCart from "./EmptyCart";
 import RecommendedProducts from "./RecommendedProducts";
+import { formatCurrency } from "../../utils/helpers";
 
 function Cart() {
   const userName = useSelector((state) => state.user.userName);
   const cart = useSelector((state) => state.cart.cart);
   const discount = useSelector((state) => state.cart.discount);
   const dispatch = useDispatch();
-
   const [coupon, setCoupon] = useState("");
   const [isCouponApplied, setIsCouponApplied] = useState(false);
 
   const totalCartPrice = useSelector((state) =>
     state.cart.cart.reduce((acc, item) => acc + item.totalPrice, 0)
   );
+  const discountedPrice = totalCartPrice * (1 - discount / 100);
 
   const handleClearCart = () => {
     dispatch(clearCart());
@@ -50,7 +51,9 @@ function Cart() {
       </ul>
 
       <div className="mt-6 flex justify-between items-center">
-        <p className="text-lg font-semibold">Total: ${totalCartPrice}</p>
+        <p className="text-lg font-semibold">
+          Total: {formatCurrency(discountedPrice)}
+        </p>
         {discount > 0 && (
           <p className="text-sm text-customGreen-300 underline font-bold">
             Discount: %{discount}
