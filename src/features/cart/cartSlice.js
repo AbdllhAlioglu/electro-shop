@@ -65,6 +65,9 @@ const cartSlice = createSlice({
     applyDiscount(state, action) {
       state.discount = action.payload; // İndirim yüzdesini güncelle
     },
+    clearDiscount(state) {
+      state.discount = 0; // İndirimi sıfırla
+    },
   },
 });
 
@@ -79,6 +82,7 @@ export const {
   decreaseItemQuantity,
   clearCart,
   applyDiscount,
+  clearDiscount,
 } = cartSlice.actions;
 
 export default cartSlice.reducer;

@@ -1,56 +1,84 @@
 // services/productService.js
 
-import store from "../store";
-import { clearCart } from "../features/cart/cartSlice";
+import { supabase } from "../libs/supabase";
+import { getOrder, createOrder } from "./orderService";
 
-const API_URL = "db.json"; // URL to the JSON file containing the products
-
-// Get menu (products)
+// Get menu (products) from Supabase
 export const getMenu = async () => {
   try {
-    const response = await fetch(`${API_URL}`);
-    const data = await response.json();
-    return data.products; // Only return the products
+    console.log("Fetching products from Supabase...");
+
+    // Supabase'den ürünleri çek
+    const { data: rawProducts, error } = await supabase
+      .from("products")
+      .select("*");
+
+    // Eğer hata varsa
+    if (error) {
+      console.error("Error fetching products from Supabase:", error);
+
+      // API anahtarı hatası mı kontrol et
+      if (error.message.includes("Invalid API key")) {
+        console.error(
+          "API anahtarı geçersiz. Lütfen Supabase projenizden doğru anahtarı kopyalayıp kontrol edin."
+        );
+      }
+
+      // Tablo erişim hatası mı kontrol et
+      if (error.message.includes("permission denied")) {
+        console.error(
+          "Tablo erişim hatası. RLS (Row Level Security) ayarlarınızı kontrol edin."
+        );
+      }
+
+      // Fallback: Local JSON'dan veri çek
+      console.log("Falling back to local data...");
+      const response = await fetch("db.json");
+      const data = await response.json();
+      return data.products;
+    }
+
+    // Supabase'den gelen verileri formatla
+    const products = rawProducts.map((product) => {
+      // features alanını doğru formata dönüştür
+      let features = product.features;
+
+      // Eğer features string ise ve JSON formatında ise
+      if (typeof features === "string") {
+        try {
+          features = JSON.parse(features);
+        } catch (error) {
+          // JSON parse edilemezse, virgülle ayrılmış liste olarak kabul et
+          features = features.split(",").map((item) => item.trim());
+        }
+      }
+
+      // Eğer features hala array değilse, boş array olarak ayarla
+      if (!Array.isArray(features)) {
+        features = [];
+      }
+
+      return {
+        ...product,
+        features,
+      };
+    });
+
+    console.log("Successfully fetched products:", products?.length);
+    return products; // Return the products
   } catch (error) {
     console.error("Error fetching products:", error);
-    return []; // Return an empty array on error
+    // Fallback: Local JSON'dan veri çek
+    try {
+      const response = await fetch("db.json");
+      const data = await response.json();
+      return data.products;
+    } catch (fallbackError) {
+      console.error("Fallback also failed:", fallbackError);
+      return []; // Return an empty array if all fails
+    }
   }
 };
 
-// Get order by orderId
-export async function getOrder(orderId) {
-  try {
-    const res = await fetch(`http://localhost:3001/orders/${orderId}`);
-    if (!res.ok) throw new Error(`Couldn't find order #${orderId}`);
-    const data = await res.json();
-    return data; // Return the entire order data
-  } catch (error) {
-    console.error("Error fetching order:", error);
-    throw new Error(`Error fetching order #${orderId}`);
-  }
-}
-
-// Create a new order
-export async function createOrder(newOrder) {
-  try {
-    const res = await fetch(`http://localhost:3001/orders`, {
-      method: "POST",
-      body: JSON.stringify(newOrder),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (!res.ok) throw new Error("Failed to create order");
-    const data = await res.json();
-
-    // Dispatch action to clear cart after order creation
-    return data;
-    // Return the newly created order data
-  } catch (error) {
-    console.error("Error creating order:", error);
-    throw new Error("Failed creating your order");
-  } finally {
-    store.dispatch(clearCart());
-  }
-}
+// sipariş işlevleri için orderService.js'e yönlendirme
+export { getOrder, createOrder };

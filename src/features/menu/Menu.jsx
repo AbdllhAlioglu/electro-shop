@@ -5,12 +5,18 @@ import MenuItem from "./MenuItem";
 import SortMenu from "./SortMenu";
 import SearchBar from "../../ui/SearchBar";
 import NotFoundProduct from "./NotFoundProduct";
+import { FaFilter, FaLightbulb, FaTag } from "react-icons/fa";
 
 export default function Menu() {
-  const menu = useLoaderData(); // Menü verisini al
-  const [sortedMenu, setSortedMenu] = useState(menu); // Menü verisi, sıralanmış listeyi tutar
-  const [searchTerm, setSearchTerm] = useState(""); // Arama terimini tutar
-  const [filteredMenu, setFilteredMenu] = useState(menu); // Arama sonuçlarını tutan state
+  const menu = useLoaderData();
+  const [sortedMenu, setSortedMenu] = useState(menu);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredMenu, setFilteredMenu] = useState(menu);
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [showFilters, setShowFilters] = useState(false);
+
+  // Extract unique categories from menu
+  const categories = ["all", ...new Set(menu.map((item) => item.category))];
 
   const handleSearch = (searchTerm) => {
     setSearchTerm(searchTerm);
@@ -43,29 +49,114 @@ export default function Menu() {
     setSortedMenu(sorted);
   };
 
+  // Filter by category and search term
   useEffect(() => {
-    const filtered = sortedMenu.filter((product) =>
-      product.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    setFilteredMenu(filtered);
-  }, [searchTerm, sortedMenu]); // searchTerm veya sortedMenu değiştiğinde tetiklenir
+    let newFilteredMenu = sortedMenu;
+
+    // Apply category filter
+    if (selectedCategory !== "all") {
+      newFilteredMenu = newFilteredMenu.filter(
+        (product) => product.category === selectedCategory
+      );
+    }
+
+    // Apply search filter
+    if (searchTerm) {
+      newFilteredMenu = newFilteredMenu.filter((product) =>
+        product.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    setFilteredMenu(newFilteredMenu);
+  }, [searchTerm, sortedMenu, selectedCategory]);
 
   return (
-    <div className="px-4 py-6 h-screen">
-      <div className="flex  items-center w-full p-[30px]">
-        <SearchBar onSearch={handleSearch} />
-        <SortMenu onSortChange={handleSortChange} />
-      </div>
+    <div className="bg-gray-50 min-h-screen">
+      <div className="max-w-7xl mx-auto px-4 py-10">
+        {/* Header */}
+        <div className="mb-10 text-center md:text-left">
+          <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
+            Electronic Products
+          </h1>
+          <p className="text-gray-600 max-w-2xl md:mx-0">
+            Discover our wide range of high-quality electronic products for your
+            home and office needs.
+          </p>
+        </div>
 
-      {filteredMenu.length === 0 ? (
-        <NotFoundProduct />
-      ) : (
-        <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {filteredMenu.map((product) => (
-            <MenuItem product={product} key={product.id} />
-          ))}
-        </ul>
-      )}
+        {/* Search and Filter Bar */}
+        <div className="bg-white rounded-xl shadow-sm p-5 mb-8">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+            <SearchBar onSearch={handleSearch} />
+            <div className="flex flex-wrap items-center gap-3">
+              <SortMenu onSortChange={handleSortChange} />
+              <button
+                onClick={() => setShowFilters(!showFilters)}
+                className="inline-flex items-center gap-2 px-4 py-2.5 bg-gray-100 hover:bg-gray-200 rounded-lg text-gray-700 transition-all font-medium"
+              >
+                <FaFilter className="text-customGreen-500" />
+                <span>Filter</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Category Filters */}
+          {showFilters && (
+            <div className="mt-5 pt-5 border-t border-gray-100">
+              <h3 className="font-medium text-gray-700 mb-3 flex items-center gap-2">
+                <FaTag className="text-customGreen-500" />
+                Categories
+              </h3>
+              <div className="flex flex-wrap gap-2">
+                {categories.map((category) => (
+                  <button
+                    key={category}
+                    onClick={() => setSelectedCategory(category)}
+                    className={`px-4 py-2 rounded-lg text-sm transition-all ${
+                      selectedCategory === category
+                        ? "bg-customGreen-500 text-white shadow-sm"
+                        : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                    }`}
+                  >
+                    {category === "all" ? "All Products" : category}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Results Summary */}
+        <div className="mb-8 flex flex-col md:flex-row justify-between items-start md:items-center bg-white p-4 rounded-lg shadow-sm border border-gray-100">
+          <div className="flex items-center gap-2 text-gray-700">
+            <FaLightbulb className="text-yellow-400" />
+            <span>
+              <strong>{filteredMenu.length}</strong>{" "}
+              {filteredMenu.length === 1 ? "product" : "products"} found
+              {selectedCategory !== "all" && ` in ${selectedCategory}`}
+            </span>
+          </div>
+          {selectedCategory !== "all" && (
+            <button
+              onClick={() => setSelectedCategory("all")}
+              className="mt-2 md:mt-0 text-sm text-customGreen-500 hover:text-customGreen-700 hover:underline transition-colors font-medium"
+            >
+              Clear filter
+            </button>
+          )}
+        </div>
+
+        {/* Product Grid */}
+        {filteredMenu.length === 0 ? (
+          <NotFoundProduct />
+        ) : (
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {filteredMenu.map((product) => (
+              <MenuItem product={product} key={product.id} />
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

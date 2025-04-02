@@ -1,3 +1,4 @@
+// kullanıcılar için para formatı
 export function formatCurrency(value) {
   return new Intl.NumberFormat("tr-TR", {
     style: "currency",
@@ -5,6 +6,7 @@ export function formatCurrency(value) {
   }).format(value);
 }
 
+//  kullanıcılar için tarih ve saat formatı
 export function formatDateTime(dateStr) {
   return new Intl.DateTimeFormat("tr-TR", {
     day: "numeric",
@@ -14,6 +16,7 @@ export function formatDateTime(dateStr) {
   }).format(new Date(dateStr));
 }
 
+//  kullanıcılar için kalan süreyi hesapla
 export function calculateRemainingTime(dateStr) {
   const now = new Date().getTime();
   const targetTime = new Date(dateStr).getTime();

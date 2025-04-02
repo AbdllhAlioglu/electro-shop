@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import OrderSummaryItem from "./OrderSummaryItem";
 import { useLoaderData } from "react-router-dom";
 import {
@@ -6,24 +6,53 @@ import {
   formatCurrency,
   formatDateTime,
 } from "../../utils/helpers";
-import { getOrder } from "../../services/productService";
-import { useSelector } from "react-redux";
+import { getOrder } from "../../services/orderService";
+import { useSelector, useDispatch } from "react-redux";
+import { resetOrderCreated } from "./orderSlice";
+import toast from "react-hot-toast";
 
 function Order() {
   const order = useLoaderData();
-  const discount = useSelector((state) => state.cart.discount);
-  const discountedPrice =
-    order.cart.reduce((acc, item) => acc + item.totalPrice, 0) *
-    (1 - discount / 100);
+  const dispatch = useDispatch();
+  const { orderCreated, currentOrderId } = useSelector((state) => state.order);
+
+  // Veriyi kontrol et
+  console.log("Order data loaded:", order);
+
+  // Eğer order.cart tanımlanmamışsa, boş bir array olarak ayarla
+  if (!order.cart) {
+    console.warn("Order.cart is undefined, setting to empty array");
+    order.cart = [];
+  }
+
+  // Sipariş başarıyla oluşturulduğunda toast bildirimini göster
+  useEffect(() => {
+    console.log("Order component useEffect - Redux state:", {
+      orderCreated,
+      currentOrderId,
+      orderId: order.id,
+    });
+
+    if (orderCreated && currentOrderId === order.id) {
+      console.log("Showing success toast notification!");
+      // Toast bildirimi göster
+      toast.success("Siparişiniz başarıyla oluşturuldu!");
+      // Bildirimi sıfırla (tekrar göstermeyi engelle)
+      dispatch(resetOrderCreated());
+    }
+  }, [orderCreated, currentOrderId, order.id, dispatch]);
 
   const {
     id,
     priority: expressDelivery,
-    cart: items,
+    cart: items = [],
     deliveryTime = Date.now() + 30 * 60 * 1000,
+    discount = 0,
+    discountedTotal = 0,
   } = order;
+
   const totalPrice = items.reduce((sum, item) => sum + item.totalPrice, 0);
-  // const totalAmount = items.reduce((sum, item) => sum + item.totalPrice, 0);
+  const finalPrice = discount > 0 ? discountedTotal : totalPrice;
   const timeLeft = deliveryTime ? calculateRemainingTime(deliveryTime) : 0;
 
   return (
@@ -77,15 +106,22 @@ function Order() {
 
         {/* Discount varsa göster */}
         {discount > 0 && (
-          <p className="text-stone-200 text-center my-4 font-extrabold bg-gradient-to-r from-customGreen-400 via-customGreen-200 to-stone-200 rounded-full p-2">
-            {`${discount}% applied`}
-          </p>
+          <div className="mt-3 mb-3">
+            <div className="flex flex-wrap justify-between gap-4 text-customGreen-600">
+              <p className="text-sm font-medium">Discount ({discount}%):</p>
+              <p className="text-lg font-bold">
+                -{formatCurrency(totalPrice - finalPrice)}
+              </p>
+            </div>
+
+            <div className="w-full h-0.5 bg-gray-200 my-3"></div>
+          </div>
         )}
 
         <div className="flex flex-wrap justify-between gap-4 mt-2">
           <p className="text-sm font-medium text-gray-600">Amount to pay:</p>
           <p className="text-xl font-bold text-blue-800">
-            {formatCurrency(discount > 0 ? discountedPrice : totalPrice)}
+            {formatCurrency(finalPrice)}
           </p>
         </div>
       </section>

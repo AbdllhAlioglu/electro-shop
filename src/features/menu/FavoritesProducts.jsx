@@ -1,22 +1,108 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { removeFromFavorites } from "../menu/favoritesSlice"; // Favori kaldırma işlemi için action
-import { products } from "../../../public/db.json";
+import {
+  removeFromFavoritesAsync,
+  fetchUserFavorites,
+} from "../menu/favoritesSlice";
+import { supabase } from "../../libs/supabase";
 import Button from "../../ui/Button";
 import NotFoundFavorite from "./NotFoundFavorite";
 import { formatCurrency } from "../../utils/helpers";
+import { useAuth } from "../../context/AuthContext";
+
+// Ensure consistent ID type (convert to string)
+const normalizeId = (id) => String(id);
 
 export default function FavoritesProducts() {
-  const favorites = useSelector((state) => state.favorites.favorites); // Redux store'dan favori ürünleri alıyoruz
+  const { isAuthenticated } = useAuth();
+  const favorites = useSelector((state) => state.favorites.favorites);
   const dispatch = useDispatch();
+  const [favoriteProducts, setFavoriteProducts] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [removingItems, setRemovingItems] = useState(new Set());
 
-  const favoriteProducts = products.filter((product) =>
-    favorites.includes(product.id)
-  );
-  const handleRemoveFavorite = (product) => {
-    dispatch(removeFromFavorites(product)); // Favori ürünü store'dan kaldır
+  // Kullanıcı oturumunu kontrol et ve favorileri yükle
+  useEffect(() => {
+    if (isAuthenticated) {
+      dispatch(fetchUserFavorites());
+    }
+  }, [isAuthenticated, dispatch]);
+
+  // Favoriler güncellendiğinde ürünleri getir
+  useEffect(() => {
+    async function fetchFavoriteProducts() {
+      if (!favorites.length) {
+        setFavoriteProducts([]);
+        setIsLoading(false);
+        return;
+      }
+
+      try {
+        // Normalize all favorite IDs
+        const normalizedFavorites = favorites.map(normalizeId);
+
+        // Fetch products from Supabase that match favorite IDs
+        const { data, error } = await supabase
+          .from("products")
+          .select("*")
+          .in("id", normalizedFavorites);
+
+        if (error) {
+          console.error("Ürünleri yükleme hatası:", error);
+          throw error;
+        }
+
+        if (data) {
+          setFavoriteProducts(data);
+        } else {
+          setFavoriteProducts([]);
+        }
+      } catch (error) {
+        console.error("Favori ürünleri yükleme hatası:", error);
+        setFavoriteProducts([]);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    fetchFavoriteProducts();
+  }, [favorites]);
+
+  const handleRemoveFavorite = async (productId) => {
+    // Aynı ürün için işlem devam ediyorsa çık
+    if (removingItems.has(productId)) return;
+
+    try {
+      // İşlem başladığını belirt
+      setRemovingItems((prev) => new Set([...prev, productId]));
+
+      // Favorilerden kaldır
+      await dispatch(removeFromFavoritesAsync(productId)).unwrap();
+    } catch (error) {
+      console.error("Favori kaldırma hatası:", error);
+      alert("Favori kaldırılamadı: " + error);
+    } finally {
+      // İşlem bittiğini belirt
+      setRemovingItems((prev) => {
+        const newSet = new Set([...prev]);
+        newSet.delete(productId);
+        return newSet;
+      });
+    }
   };
 
+  // Yükleme ekranı
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center min-h-[60vh]">
+        <div className="text-lg font-medium text-gray-600">
+          Favoriler yükleniyor...
+        </div>
+      </div>
+    );
+  }
+
+  // Favori yoksa
   if (favoriteProducts.length === 0) {
     return <NotFoundFavorite />;
   }
@@ -48,8 +134,11 @@ export default function FavoritesProducts() {
               onClick={() => handleRemoveFavorite(product.id)}
               type="small"
               className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 transition-colors duration-200 text-xs sm:text-sm"
+              disabled={removingItems.has(product.id)}
             >
-              Remove
+              {removingItems.has(product.id)
+                ? "Kaldırılıyor..."
+                : "Favorilerden Çıkar"}
             </Button>
           </div>
         ))}

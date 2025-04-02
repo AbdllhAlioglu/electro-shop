@@ -1,10 +1,21 @@
 import React, { useState } from "react";
 import { Form, redirect, useActionData, useNavigation } from "react-router-dom";
-import { createOrder } from "../../services/productService";
+import { createOrder } from "../../services/orderService";
 import Button from "../../ui/Button";
 import { useSelector } from "react-redux";
 import { getCart } from "../cart/cartSlice";
 import { getAddress } from "../../services/adressService";
+import toast from "react-hot-toast";
+import store from "../../store";
+import { orderCreatedSuccess } from "./orderSlice";
+import { formatCurrency } from "../../utils/helpers";
+
+// Benzersiz ID oluştur
+function createOrderId() {
+  return `${Date.now()}-${Math.floor(Math.random() * 10000)
+    .toString()
+    .padStart(4, "0")}`;
+}
 
 const isValidPhone = (str) =>
   /^\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}$/.test(
@@ -17,6 +28,12 @@ function OrderForm() {
 
   const userName = useSelector((state) => state.user.userName);
   const cart = useSelector(getCart);
+  const discount = useSelector((state) => state.cart.discount);
+
+  // Toplam fiyat hesaplama
+  const totalCartPrice = cart.reduce((acc, item) => acc + item.totalPrice, 0);
+  const discountedPrice = totalCartPrice * (1 - discount / 100);
+
   const navigation = useNavigation();
   const isSubmitting = navigation.state === "submitting";
   const formErrors = useActionData();
@@ -51,7 +68,9 @@ function OrderForm() {
 
   return (
     <div className="px-4 py-6">
-      <h2 className="mb-8 text-xl font-semibold">Ready to order? Let’s go!</h2>
+      <h2 className="mb-8 text-xl font-semibold">
+        Ready to order? Let&apos;s go!
+      </h2>
 
       <Form method="POST">
         <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center">
@@ -113,8 +132,32 @@ function OrderForm() {
           </label>
         </div>
 
+        {/* Sipariş Özeti */}
+        <div className="mb-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+          <h3 className="text-lg font-semibold mb-3">Order Summary</h3>
+
+          <div className="flex justify-between mb-2">
+            <span>Subtotal:</span>
+            <span>{formatCurrency(totalCartPrice)}</span>
+          </div>
+
+          {discount > 0 && (
+            <div className="flex justify-between mb-2 text-customGreen-600">
+              <span>Discount ({discount}%):</span>
+              <span>-{formatCurrency(totalCartPrice - discountedPrice)}</span>
+            </div>
+          )}
+
+          <div className="flex justify-between pt-2 border-t border-gray-200 font-semibold">
+            <span>Total:</span>
+            <span>{formatCurrency(discountedPrice)}</span>
+          </div>
+        </div>
+
         <div>
           <input type="hidden" name="cart" value={JSON.stringify(cart)} />
+          <input type="hidden" name="discount" value={discount} />
+          <input type="hidden" name="discountedTotal" value={discountedPrice} />
           <Button disabled={isSubmitting} type="primary">
             {isSubmitting ? "Placing order..." : "Order Now"}
           </Button>
@@ -128,24 +171,45 @@ export async function action({ request }) {
   const formData = await request.formData();
   const data = Object.fromEntries(formData);
 
-  const order = {
-    ...data,
-    cart: JSON.parse(data.cart),
-    priority: data.priority === "on",
-  };
-
+  // Validation
   const errors = {};
-  if (!isValidPhone(order.phone))
+  if (!isValidPhone(data.phone))
     errors.phone =
       "Please provide a valid phone number. We might need to contact you.";
 
   if (Object.keys(errors).length > 0) return errors;
 
+  // Create order object with unique ID
+  const order = {
+    id: createOrderId(),
+    customer: data.customer,
+    phone: data.phone,
+    address: data.address,
+    cart: JSON.parse(data.cart),
+    priority: data.priority === "on",
+    discount: Number(data.discount) || 0,
+    discountedTotal: Number(data.discountedTotal) || 0,
+  };
+
   try {
+    // Send order to Supabase
     const newOrder = await createOrder(order);
+    console.log("Order successfully created with ID:", newOrder.id);
+
+    // Dispatch success action to Redux - will trigger toast in Order component
+    console.log("Dispatching orderCreatedSuccess action with ID:", newOrder.id);
+    store.dispatch(orderCreatedSuccess(newOrder.id));
+
+    // Clear cart in Redux store handled in createOrder function
+
+    // Redirect to order detail page
     return redirect(`/order/${newOrder.id}`);
   } catch (err) {
     console.error("Order creation failed:", err);
+
+    // For errors, we can show toast directly as we're not redirecting
+    toast.error("Sipariş oluşturulamadı: " + err.message);
+
     return { error: "Order creation failed. Please try again." };
   }
 }

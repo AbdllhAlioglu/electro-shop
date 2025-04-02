@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { clearCart, applyDiscount } from "./cartSlice";
+import { clearCart, applyDiscount, clearDiscount } from "./cartSlice";
 import LinkButton from "../../ui/LinkButton";
 import Button from "../../ui/Button";
 import CartItem from "./CartItem";
 import EmptyCart from "./EmptyCart";
 import RecommendedProducts from "./RecommendedProducts";
 import { formatCurrency } from "../../utils/helpers";
+import { toast } from "react-hot-toast";
 
 function Cart() {
   const userName = useSelector((state) => state.user.userName);
@@ -15,6 +16,8 @@ function Cart() {
   const dispatch = useDispatch();
   const [coupon, setCoupon] = useState("");
   const [isCouponApplied, setIsCouponApplied] = useState(false);
+  const [isValidatingCoupon, setIsValidatingCoupon] = useState(false);
+  const [couponError, setCouponError] = useState("");
 
   const totalCartPrice = useSelector((state) =>
     state.cart.cart.reduce((acc, item) => acc + item.totalPrice, 0)
@@ -23,18 +26,62 @@ function Cart() {
 
   const handleClearCart = () => {
     dispatch(clearCart());
-  };
-
-  const handleApplyCoupon = () => {
-    if (coupon === "Alioğlu") {
-      dispatch(applyDiscount(20)); // %20 indirim uygula
-      alert("Coupon applied! You got a 20% discount.");
-      setIsCouponApplied(true);
-      setCoupon("");
-    } else {
-      alert("Invalid coupon code.");
+    if (isCouponApplied) {
+      dispatch(clearDiscount());
       setIsCouponApplied(false);
     }
+  };
+
+  const handleApplyCoupon = async () => {
+    if (!coupon.trim()) {
+      setCouponError("Please enter a coupon code");
+      return;
+    }
+
+    setIsValidatingCoupon(true);
+    setCouponError("");
+
+    try {
+      // Kupon kodunu veritabanından kontrol et
+      // NOT: Gerçek bir veritabanı kontrolü yapılabilir
+      // Bu örnekte basit bir kontrol yapıyoruz
+
+      // Gerçek bir uygulama için veritabanında kupon kodunu kontrol edebilirsiniz:
+      // const { data, error } = await supabase
+      //   .from("coupons")
+      //   .select("*")
+      //   .eq("code", coupon)
+      //   .single();
+
+      // Şimdilik basit bir kontrol yapalım
+      await new Promise((resolve) => setTimeout(resolve, 600)); // Simüle edilmiş API çağrısı
+
+      if (coupon === "Alioğlu") {
+        dispatch(applyDiscount(20)); // %20 indirim uygula
+        setIsCouponApplied(true);
+        setCoupon("");
+        setCouponError("");
+        // Başarı bildirimi göster
+        toast.success("Coupon applied! You got a 20% discount.");
+      } else {
+        // Kupon bulunamadı veya geçersiz
+        setCouponError("Invalid coupon code");
+        dispatch(clearDiscount()); // Önceki indirimi temizle
+        setIsCouponApplied(false);
+      }
+    } catch (error) {
+      console.error("Error validating coupon:", error);
+      setCouponError("Error validating coupon");
+    } finally {
+      setIsValidatingCoupon(false);
+    }
+  };
+
+  const handleRemoveCoupon = () => {
+    dispatch(clearDiscount());
+    setIsCouponApplied(false);
+    setCoupon("");
+    setCouponError("");
   };
 
   if (!cart.length) return <EmptyCart />;
@@ -52,37 +99,64 @@ function Cart() {
 
       <div className="mt-6 flex justify-between items-center">
         <p className="text-lg font-semibold">
-          Total: {formatCurrency(discountedPrice)}
+          {discount > 0 ? (
+            <>
+              <span className="text-gray-500 line-through mr-2">
+                {formatCurrency(totalCartPrice)}
+              </span>
+              <span className="text-customGreen-600">
+                {formatCurrency(discountedPrice)}
+              </span>
+            </>
+          ) : (
+            formatCurrency(totalCartPrice)
+          )}
         </p>
         {discount > 0 && (
-          <p className="text-sm text-customGreen-300 underline font-bold">
-            Discount: %{discount}
-          </p>
+          <div className="px-3 py-1 bg-customGreen-50 text-customGreen-600 rounded-full text-sm font-medium">
+            %{discount} off
+          </div>
         )}
       </div>
 
-      <div className="mt-6 flex flex-col items-end gap-4">
-        <input
-          type="text"
-          value={coupon}
-          onChange={(e) => setCoupon(e.target.value)}
-          placeholder={isCouponApplied ? "Coupon applied" : "Coupon code"}
-          disabled={isCouponApplied}
-          className="border p-2 rounded input"
-        />
-        {!isCouponApplied ? (
-          <Button
-            type="small"
-            onClick={handleApplyCoupon}
-            disabled={isCouponApplied}
-          >
-            Apply Coupon
-          </Button>
-        ) : (
-          <Button type="primary" disabled={isCouponApplied}>
-            Applied Coupon
-          </Button>
-        )}
+      {/* Kupon bölümü */}
+      <div className="mt-6 p-3 bg-gray-50 rounded-lg">
+        <p className="text-sm font-medium mb-2">Discount Coupon</p>
+        <div className="flex items-end gap-2">
+          <div className="flex-grow">
+            <input
+              type="text"
+              value={coupon}
+              onChange={(e) => setCoupon(e.target.value)}
+              placeholder={
+                isCouponApplied ? "Coupon applied" : "Enter coupon code"
+              }
+              disabled={isCouponApplied || isValidatingCoupon}
+              className="border p-2 rounded input w-full"
+            />
+            {couponError && (
+              <p className="text-red-500 text-xs mt-1">{couponError}</p>
+            )}
+          </div>
+
+          {isCouponApplied ? (
+            <Button
+              type="small"
+              onClick={handleRemoveCoupon}
+              className="bg-red-100 text-red-600 hover:bg-red-200"
+            >
+              Remove
+            </Button>
+          ) : (
+            <Button
+              type="small"
+              onClick={handleApplyCoupon}
+              disabled={isValidatingCoupon}
+            >
+              {isValidatingCoupon ? "Validating..." : "Apply"}
+            </Button>
+          )}
+        </div>
       </div>
 
       <div className="mt-6 space-x-2">
