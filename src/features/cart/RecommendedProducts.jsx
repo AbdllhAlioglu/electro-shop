@@ -15,7 +15,7 @@ export default function RecommendedProducts() {
     <div className="mt-8">
       {/* Başlık */}
       <h2 className="text-2xl font-bold text-gray-800 mb-4">
-        Recommended Products
+        Önerilen Ürünler
       </h2>
 
       {/* Ürünler Grid */}

@@ -47,7 +47,7 @@ function CartItem({ item, discount }) {
           -
         </Button>
         <Button type="small" onClick={handleDeleteItem}>
-          Delete
+          Sil
         </Button>
       </div>
     </li>

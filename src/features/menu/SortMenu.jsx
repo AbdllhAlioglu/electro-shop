@@ -15,14 +15,14 @@ export default function SortMenu({ onSortChange }) {
         onChange={handleSortChange}
         className="appearance-none pl-10 pr-8 py-2.5 border border-gray-200 rounded-lg bg-white text-gray-700 cursor-pointer focus:ring-2 focus:ring-customGreen-100 focus:border-customGreen-200 transition-all outline-none hover:border-customGreen-200 shadow-sm font-medium"
       >
-        <option value="">Sort Products</option>
-        <option value="desc">Price: High to Low</option>
-        <option value="asc">Price: Low to High</option>
-        <option value="nameAsc">Name: A-Z</option>
-        <option value="nameDesc">Name: Z-A</option>
-        <option value="ratingDesc">Rating: High to Low</option>
-        <option value="ratingAsc">Rating: Low to High</option>
-        <option value="category">Category</option>
+        <option value="">Ürünleri Sırala</option>
+        <option value="desc">Fiyat: Yüksekten Düşüğe</option>
+        <option value="asc">Fiyat: Düşükten Yükseğe</option>
+        <option value="nameAsc">İsim: A-Z</option>
+        <option value="nameDesc">İsim: Z-A</option>
+        <option value="ratingDesc">Puan: Yüksekten Düşüğe</option>
+        <option value="ratingAsc">Puan: Düşükten Yükseğe</option>
+        <option value="category">Kategori</option>
       </select>
       <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
         <svg

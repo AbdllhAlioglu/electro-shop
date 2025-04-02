@@ -76,11 +76,11 @@ export default function Menu() {
         {/* Header */}
         <div className="mb-10 text-center md:text-left">
           <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
-            Electronic Products
+            Elektronik Ürünler
           </h1>
           <p className="text-gray-600 max-w-2xl md:mx-0">
-            Discover our wide range of high-quality electronic products for your
-            home and office needs.
+            Ev ve ofis ihtiyaçlarınız için yüksek kaliteli geniş elektronik ürün
+            yelpazemizi keşfedin.
           </p>
         </div>
 
@@ -95,7 +95,7 @@ export default function Menu() {
                 className="inline-flex items-center gap-2 px-4 py-2.5 bg-gray-100 hover:bg-gray-200 rounded-lg text-gray-700 transition-all font-medium"
               >
                 <FaFilter className="text-customGreen-500" />
-                <span>Filter</span>
+                <span>Filtrele</span>
               </button>
             </div>
           </div>
@@ -105,7 +105,7 @@ export default function Menu() {
             <div className="mt-5 pt-5 border-t border-gray-100">
               <h3 className="font-medium text-gray-700 mb-3 flex items-center gap-2">
                 <FaTag className="text-customGreen-500" />
-                Categories
+                Kategoriler
               </h3>
               <div className="flex flex-wrap gap-2">
                 {categories.map((category) => (
@@ -118,7 +118,7 @@ export default function Menu() {
                         : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                     }`}
                   >
-                    {category === "all" ? "All Products" : category}
+                    {category === "all" ? "Tüm Ürünler" : category}
                   </button>
                 ))}
               </div>
@@ -132,8 +132,9 @@ export default function Menu() {
             <FaLightbulb className="text-yellow-400" />
             <span>
               <strong>{filteredMenu.length}</strong>{" "}
-              {filteredMenu.length === 1 ? "product" : "products"} found
-              {selectedCategory !== "all" && ` in ${selectedCategory}`}
+              {filteredMenu.length === 1 ? "ürün" : "ürün"} bulundu
+              {selectedCategory !== "all" &&
+                ` ${selectedCategory} kategorisinde`}
             </span>
           </div>
           {selectedCategory !== "all" && (
@@ -141,7 +142,7 @@ export default function Menu() {
               onClick={() => setSelectedCategory("all")}
               className="mt-2 md:mt-0 text-sm text-customGreen-500 hover:text-customGreen-700 hover:underline transition-colors font-medium"
             >
-              Clear filter
+              Filtreyi Temizle
             </button>
           )}
         </div>

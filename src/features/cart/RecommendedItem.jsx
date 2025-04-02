@@ -31,7 +31,7 @@ export default function RecommendedItem({ product }) {
       <h3 className="text-lg font-medium">{name}</h3>
       <p className="text-customGreen-500 font-semibold">{price} ₺</p>
       <Button type="small" onClick={handleAddToCart}>
-        Add to cart
+        Sepete Ekle
       </Button>
     </div>
   );

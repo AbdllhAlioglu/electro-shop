@@ -24,12 +24,12 @@ function CreateUser() {
       className="flex flex-col items-center px-4 sm:px-8 md:px-16"
     >
       <p className="mb-4 text-sm text-stone-600 sm:text-base md:text-lg ">
-        👋 Welcome! Please start by telling us your name:
+        👋 Hoş geldiniz! Lütfen adınızı yazarak başlayın:
       </p>
 
       <input
         type="text"
-        placeholder="Your full name"
+        placeholder="Adınız ve soyadınız"
         value={username}
         onChange={(e) => setUsername(e.target.value)}
         className="input mb-8 w-full sm:w-72 md:w-96 lg:w-1/3"
@@ -37,7 +37,7 @@ function CreateUser() {
 
       {username !== "" && (
         <div>
-          <Button type="primary">Start ordering</Button>
+          <Button type="primary">Alışverişe Başla</Button>
         </div>
       )}
     </form>

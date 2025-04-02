@@ -69,12 +69,12 @@ function OrderForm() {
   return (
     <div className="px-4 py-6">
       <h2 className="mb-8 text-xl font-semibold">
-        Ready to order? Let&apos;s go!
+        Sipariş vermeye hazır mısınız? Hadi başlayalım!
       </h2>
 
       <Form method="POST">
         <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center">
-          <label className="sm:basis-40">First Name</label>
+          <label className="sm:basis-40">Ad Soyad</label>
           <input
             className="input grow"
             type="text"
@@ -85,7 +85,7 @@ function OrderForm() {
         </div>
 
         <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center">
-          <label className="sm:basis-40">Phone Number</label>
+          <label className="sm:basis-40">Telefon Numarası</label>
           <div className="grow">
             <input className="input w-full" type="tel" name="phone" required />
             {formErrors?.phone && (
@@ -97,7 +97,7 @@ function OrderForm() {
         </div>
 
         <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center">
-          <label className="sm:basis-40">Address</label>
+          <label className="sm:basis-40">Adres</label>
           <div className="grow">
             <div className="relative w-full">
               <input
@@ -114,7 +114,7 @@ function OrderForm() {
                 className="absolute right-4 sm:right-6 top-1/2 transform -translate-y-1/2 bg-customGreen-200 px-2 py-1 sm:px-4 sm:py-2 text-sm sm:text-base lg:text-lg text-white hover:customGreen-300 focus:outline-none focus:ring focus:ring-customGreen-200 focus:ring-offset-2 rounded-full w-1/4 sm:w-1/5 lg:w-1/6"
                 disabled={isFetchingAddress}
               >
-                {isFetchingAddress ? "Fetching..." : "Locate"}
+                {isFetchingAddress ? "Yükleniyor..." : "Konum Al"}
               </button>
             </div>
           </div>
@@ -128,28 +128,28 @@ function OrderForm() {
             id="priority"
           />
           <label htmlFor="priority" className="font-medium">
-            Want to give your order priority?
+            Siparişinize öncelik vermek ister misiniz?
           </label>
         </div>
 
         {/* Sipariş Özeti */}
         <div className="mb-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
-          <h3 className="text-lg font-semibold mb-3">Order Summary</h3>
+          <h3 className="text-lg font-semibold mb-3">Sipariş Özeti</h3>
 
           <div className="flex justify-between mb-2">
-            <span>Subtotal:</span>
+            <span>Ara Toplam:</span>
             <span>{formatCurrency(totalCartPrice)}</span>
           </div>
 
           {discount > 0 && (
             <div className="flex justify-between mb-2 text-customGreen-600">
-              <span>Discount ({discount}%):</span>
+              <span>İndirim ({discount}%):</span>
               <span>-{formatCurrency(totalCartPrice - discountedPrice)}</span>
             </div>
           )}
 
           <div className="flex justify-between pt-2 border-t border-gray-200 font-semibold">
-            <span>Total:</span>
+            <span>Toplam:</span>
             <span>{formatCurrency(discountedPrice)}</span>
           </div>
         </div>
@@ -159,7 +159,7 @@ function OrderForm() {
           <input type="hidden" name="discount" value={discount} />
           <input type="hidden" name="discountedTotal" value={discountedPrice} />
           <Button disabled={isSubmitting} type="primary">
-            {isSubmitting ? "Placing order..." : "Order Now"}
+            {isSubmitting ? "Sipariş veriliyor..." : "Şimdi Sipariş Ver"}
           </Button>
         </div>
       </Form>

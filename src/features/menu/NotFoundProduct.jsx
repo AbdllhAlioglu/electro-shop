@@ -9,16 +9,16 @@ export default function NotFoundProduct() {
           <FaSearch size={28} />
         </div>
         <h2 className="text-2xl font-bold text-gray-800 mb-3">
-          No Products Found
+          Ürün Bulunamadı
         </h2>
         <p className="text-gray-600 mb-8 leading-relaxed">
-          We couldn&apos;t find any products matching your search criteria. Try
-          adjusting your filters or search terms.
+          Arama kriterlerinize uygun herhangi bir ürün bulamadık. Filtrelerinizi
+          veya arama terimlerinizi değiştirmeyi deneyin.
         </p>
 
         <div className="flex justify-center items-center gap-2 text-gray-500">
           <FaSadTear className="text-yellow-400" />
-          <span>Please try a different search</span>
+          <span>Lütfen farklı bir arama deneyin</span>
         </div>
 
         <div className="h-1 w-20 bg-customGreen-200 mx-auto rounded-full mt-8"></div>

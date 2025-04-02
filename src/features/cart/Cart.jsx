@@ -34,7 +34,7 @@ function Cart() {
 
   const handleApplyCoupon = async () => {
     if (!coupon.trim()) {
-      setCouponError("Please enter a coupon code");
+      setCouponError("Lütfen bir kupon kodu giriniz");
       return;
     }
 
@@ -62,16 +62,16 @@ function Cart() {
         setCoupon("");
         setCouponError("");
         // Başarı bildirimi göster
-        toast.success("Coupon applied! You got a 20% discount.");
+        toast.success("Kupon uygulandı! %20 indirim kazandınız.");
       } else {
         // Kupon bulunamadı veya geçersiz
-        setCouponError("Invalid coupon code");
+        setCouponError("Geçersiz kupon kodu");
         dispatch(clearDiscount()); // Önceki indirimi temizle
         setIsCouponApplied(false);
       }
     } catch (error) {
       console.error("Error validating coupon:", error);
-      setCouponError("Error validating coupon");
+      setCouponError("Kupon doğrulanırken hata oluştu");
     } finally {
       setIsValidatingCoupon(false);
     }
@@ -87,9 +87,9 @@ function Cart() {
   if (!cart.length) return <EmptyCart />;
   return (
     <div className="px-4 py-3">
-      <LinkButton to="/menu">&larr; Back to menu</LinkButton>
+      <LinkButton to="/menu">&larr; Ürünlere Dön</LinkButton>
 
-      <h2 className="mt-7 text-xl font-semibold">Your cart, {userName}</h2>
+      <h2 className="mt-7 text-xl font-semibold">Sepetiniz, {userName}</h2>
 
       <ul className="mt-3 divide-y divide-stone-200 border-b">
         {cart.map((item) => (
@@ -114,14 +114,14 @@ function Cart() {
         </p>
         {discount > 0 && (
           <div className="px-3 py-1 bg-customGreen-50 text-customGreen-600 rounded-full text-sm font-medium">
-            %{discount} off
+            %{discount} indirim
           </div>
         )}
       </div>
 
       {/* Kupon bölümü */}
       <div className="mt-6 p-3 bg-gray-50 rounded-lg">
-        <p className="text-sm font-medium mb-2">Discount Coupon</p>
+        <p className="text-sm font-medium mb-2">İndirim Kuponu</p>
         <div className="flex items-end gap-2">
           <div className="flex-grow">
             <input
@@ -129,7 +129,7 @@ function Cart() {
               value={coupon}
               onChange={(e) => setCoupon(e.target.value)}
               placeholder={
-                isCouponApplied ? "Coupon applied" : "Enter coupon code"
+                isCouponApplied ? "Kupon uygulandı" : "Kupon kodu girin"
               }
               disabled={isCouponApplied || isValidatingCoupon}
               className="border p-2 rounded input w-full"
@@ -145,7 +145,7 @@ function Cart() {
               onClick={handleRemoveCoupon}
               className="bg-red-100 text-red-600 hover:bg-red-200"
             >
-              Remove
+              Kaldır
             </Button>
           ) : (
             <Button
@@ -153,7 +153,7 @@ function Cart() {
               onClick={handleApplyCoupon}
               disabled={isValidatingCoupon}
             >
-              {isValidatingCoupon ? "Validating..." : "Apply"}
+              {isValidatingCoupon ? "Doğrulanıyor..." : "Uygula"}
             </Button>
           )}
         </div>
@@ -161,10 +161,10 @@ function Cart() {
 
       <div className="mt-6 space-x-2">
         <Button to="/order/new" type="primary">
-          Order
+          Sipariş Ver
         </Button>
         <Button type="secondary" onClick={handleClearCart}>
-          Clear cart
+          Sepeti Temizle
         </Button>
       </div>
       <RecommendedProducts />

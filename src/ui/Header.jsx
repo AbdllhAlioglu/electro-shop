@@ -31,7 +31,7 @@ export default function Header() {
         className="flex items-center gap-2 text-gray-200 font-bold text-2xl"
       >
         <img src={logo} alt="Electro-Shop Logo" className="w-12 h-12" />
-        <span>Electro-Shop</span>
+        <span>ElectroShop</span>
       </Link>
 
       {/* Mobile menu toggle button */}
@@ -51,19 +51,23 @@ export default function Header() {
         {isAuthenticated ? (
           <>
             <Link to="/menu" className="text-gray-200">
-              Menu
+              Ürünler
             </Link>
             <Link to="/favorites" className="text-gray-200">
-              Favorites
+              Favoriler
             </Link>
             <Link to="/orders" className="text-gray-200">
-              Orders
+              Siparişler
             </Link>
             <Link to="/cart" className="text-gray-200">
-              Cart
+              Sepet
             </Link>
             <Link to="/profile" className="flex items-center gap-2">
-              <img src={avatar} alt="User" className="w-8 h-8 rounded-full" />
+              <img
+                src={avatar}
+                alt="Kullanıcı"
+                className="w-8 h-8 rounded-full"
+              />
               <span className="text-gray-200">{username}</span>
             </Link>
             <button
@@ -71,13 +75,13 @@ export default function Header() {
               className="flex items-center gap-1 text-gray-200 hover:underline"
             >
               <FaSignOutAlt />
-              <span>Logout</span>
+              <span>Çıkış Yap</span>
             </button>
           </>
         ) : (
           <Link to="/" className="text-gray-200 flex items-center">
             <FaUser className="mr-2" />
-            Login
+            Giriş Yap
           </Link>
         )}
       </nav>
