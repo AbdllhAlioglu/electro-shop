@@ -13,7 +13,8 @@ import OrderForm, {
 } from "./features/order/OrderForm";
 import Order, { loader as orderLoader } from "./features/order/Order";
 import Orders, { loader as ordersLoader } from "./features/order/Orders";
-import { Toaster } from "react-hot-toast";
+import ProtectedRoute from "./ui/ProtectedRoute";
+import PageNotFound from "./ui/PageNotFound";
 
 const router = createBrowserRouter([
   {
@@ -29,56 +30,65 @@ const router = createBrowserRouter([
         loader: MenuLoader,
       },
       { path: "/cart", element: <Cart />, loader: CartLoader },
-      { path: "/favorites", element: <FavoritesProducts /> },
-      { path: "/profile", element: <Profile /> },
-      { path: "/profile/edit", element: <ProfileEdit /> },
-      { path: "/order/new", element: <OrderForm />, action: createOrderAction },
+      {
+        path: "/favorites",
+        element: (
+          <ProtectedRoute>
+            <FavoritesProducts />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/profile",
+        element: (
+          <ProtectedRoute>
+            <Profile />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/profile/edit",
+        element: (
+          <ProtectedRoute>
+            <ProfileEdit />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/order/new",
+        element: (
+          <ProtectedRoute>
+            <OrderForm />
+          </ProtectedRoute>
+        ),
+        action: createOrderAction,
+      },
       {
         path: "/order/:orderId",
-        element: <Order />,
+        element: (
+          <ProtectedRoute>
+            <Order />
+          </ProtectedRoute>
+        ),
         loader: orderLoader,
       },
       {
         path: "/orders",
-        element: <Orders />,
+        element: (
+          <ProtectedRoute>
+            <Orders />
+          </ProtectedRoute>
+        ),
         loader: ordersLoader,
+      },
+      {
+        path: "*",
+        element: <PageNotFound />,
       },
     ],
   },
 ]);
 
 export default function App() {
-  return (
-    <>
-      <Toaster
-        position="top-center"
-        gutter={12}
-        containerStyle={{ margin: "8px" }}
-        toastOptions={{
-          success: {
-            duration: 5000,
-            style: {
-              background: "#4ade80",
-              color: "white",
-              fontWeight: "500",
-            },
-          },
-          error: {
-            duration: 5000,
-            style: {
-              background: "#ef4444",
-              color: "white",
-              fontWeight: "500",
-            },
-          },
-          style: {
-            fontSize: "16px",
-            maxWidth: "500px",
-            padding: "16px 24px",
-          },
-        }}
-      />
-      <RouterProvider router={router} />
-    </>
-  );
+  return <RouterProvider router={router} />;
 }

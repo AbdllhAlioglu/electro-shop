@@ -1,5 +1,6 @@
 import React from "react";
 import Header from "./Header";
+import Footer from "./Footer";
 import { Outlet } from "react-router-dom";
 import CartOverview from "../features/cart/CartOverview";
 import { useSelector } from "react-redux";
@@ -13,25 +14,26 @@ export default function AppLayout() {
 
   if (isLoading) {
     return (
-      <div className="grid h-screen grid-rows-[auto_1fr_auto] overflow-x-hidden">
+      <div className="min-h-screen flex flex-col">
         <Header />
-        <div className="overflow-x-hidden overflow-y-auto bg-gray-50">
+        <div className="flex-grow bg-gray-50">
           <main className="mx-auto">
             <div className="flex items-center min-h-screen justify-center">
               <div className="animate-spin rounded-full h-12 w-12 border-2 border-customGreen-600 border-t-transparent"></div>
             </div>
           </main>
         </div>
+        <Footer />
       </div>
     );
   }
 
   if (!isAuthenticated) {
     return (
-      <div className="grid h-screen grid-rows-[auto_1fr_auto] overflow-x-hidden">
+      <div className="min-h-screen flex flex-col">
         <Header />
-        <div className="overflow-x-hidden overflow-y-auto bg-gray-50">
-          <main className="max-w-full min-h-screen">
+        <div className="flex-grow bg-gray-50">
+          <main className="max-w-full">
             <div className="container mx-auto px-4 py-10">
               {/* Hero Section */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8 items-start">
@@ -169,20 +171,22 @@ export default function AppLayout() {
             </div>
           </main>
         </div>
+        <Footer />
       </div>
     );
   }
 
   return (
-    <div className="grid h-screen grid-rows-[auto_1fr_auto] overflow-x-hidden">
+    <div className="min-h-screen flex flex-col">
       <Header />
-      <div className="overflow-x-hidden overflow-y-auto bg-gray-50">
-        <main className="mx-4 sm:mx-8 md:mx-16 max-w-full">
+      <div className="flex-grow bg-gray-50">
+        <main className="mx-4 sm:mx-8 md:mx-16 max-w-full min-h-screen">
           <Outlet />
         </main>
       </div>
 
       {cart.length > 0 && <CartOverview />}
+      <Footer />
     </div>
   );
 }

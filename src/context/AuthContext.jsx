@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getSession } from "../features/user/userSlice";
+import toast from "react-hot-toast";
 
 const AuthContext = createContext();
 
@@ -12,6 +13,12 @@ export function AuthProvider({ children }) {
     // Check for existing session on app load
     dispatch(getSession());
   }, [dispatch]);
+
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+    }
+  }, [error]);
 
   const isAuthenticated = !!user;
   const isLoading = status === "loading";

@@ -30,6 +30,7 @@ export default function MenuItem({ product }) {
     category,
     rating,
     features: rawFeatures,
+    stock = 0, // Default to 0 if stock is not provided
   } = product;
 
   const dispatch = useDispatch();
@@ -70,6 +71,23 @@ export default function MenuItem({ product }) {
 
   // Favori olup olmadığını kontrol et
   const isLiked = normalizedFavorites.includes(normalizeId(id));
+
+  // Stock status check
+  const isOutOfStock = stock === 0;
+  const getStockStatus = () => {
+    if (isOutOfStock)
+      return { text: "Stokta Yok", className: "bg-red-100 text-red-800" };
+    if (stock <= 20)
+      return { text: "Son Birkaç Ürün", className: "bg-red-100 text-red-800" };
+    if (stock <= 50)
+      return {
+        text: "Sınırlı Stok",
+        className: "bg-yellow-100 text-yellow-800",
+      };
+    return { text: "Stokta Mevcut", className: "bg-green-100 text-green-800" };
+  };
+
+  const stockStatus = getStockStatus();
 
   const handleHeartClick = async () => {
     if (!isAuthenticated) {
@@ -271,33 +289,27 @@ export default function MenuItem({ product }) {
               {formatCurrency(price)}
             </p>
 
-            {/* Stock Indicator (optional) */}
-            {product.stock && (
-              <span
-                className={`text-xs px-2 py-1 rounded-full ${
-                  product.stock > 50
-                    ? "bg-green-100 text-green-800"
-                    : product.stock > 20
-                    ? "bg-yellow-100 text-yellow-800"
-                    : "bg-red-100 text-red-800"
-                }`}
-              >
-                {product.stock > 50
-                  ? "In Stock"
-                  : product.stock > 20
-                  ? "Limited Stock"
-                  : "Low Stock"}
-              </span>
-            )}
+            {/* Stock Indicator */}
+            <span
+              className={`text-xs px-2 py-1 rounded-full ${stockStatus.className}`}
+            >
+              {stockStatus.text}
+            </span>
           </div>
 
           {/* Add to Cart Button */}
           <button
             onClick={handleAddToCart}
-            className="w-full py-2.5 bg-customGreen-500 text-white rounded-lg hover:bg-customGreen-600 transition-colors focus:outline-none focus:ring-2 focus:ring-customGreen-300 focus:ring-opacity-50 flex items-center justify-center gap-2"
+            disabled={isOutOfStock}
+            className={`w-full py-2.5 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-customGreen-300 focus:ring-opacity-50 flex items-center justify-center gap-2
+              ${
+                isOutOfStock
+                  ? "bg-gray-300 cursor-not-allowed text-gray-500"
+                  : "bg-customGreen-500 text-white hover:bg-customGreen-600"
+              }`}
           >
             <FaShoppingCart />
-            <span>Add to Cart</span>
+            <span>{isOutOfStock ? "Stokta Yok" : "Sepete Ekle"}</span>
           </button>
         </div>
       </div>
