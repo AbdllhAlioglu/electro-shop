@@ -9,8 +9,8 @@ import toast from "react-hot-toast";
 import store from "../../store";
 import { orderCreatedSuccess } from "./orderSlice";
 import { formatCurrency } from "../../utils/helpers";
-import Cards from "react-credit-cards";
-import "react-credit-cards/es/styles-compiled.css";
+import Cards from "react-credit-cards-2";
+import "react-credit-cards-2/dist/es/styles-compiled.css";
 
 // Benzersiz ID oluştur
 function createOrderId() {
