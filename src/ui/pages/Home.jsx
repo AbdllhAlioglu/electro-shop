@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import CreateUsername from "../../features/user/CreateUsername";
 import logo from "/assets/icons/Logo.svg";
 import { useSelector } from "react-redux";
 import Button from "../../ui/common/Button";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "../../libs/supabase";
 import {
   FaShoppingBag,
   FaUserShield,
@@ -15,46 +14,16 @@ import {
 export default function Home() {
   const username = useSelector((state) => state.user.userName);
   const navigate = useNavigate();
-  const [categories, setCategories] = useState([]);
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        // Fetch categories
-        const { data: categoryData, error } = await supabase
-          .from("products")
-          .select("category")
-          .limit(100);
-
-        if (error) {
-          throw error;
-        }
-
-        // Güvenli bir şekilde kategorileri kontrol et
-        if (categoryData && Array.isArray(categoryData)) {
-          // Extract unique categories
-          const uniqueCategories = [
-            ...new Set(categoryData.map((item) => item.category)),
-          ]
-            .filter(Boolean)
-            .slice(0, 6); // null/undefined değerleri filtrele ve 6 kategori ile sınırla
-
-          setCategories(uniqueCategories);
-        } else {
-          // Veri yoksa boş array ayarla
-          setCategories([]);
-        }
-      } catch (error) {
-        // Hata durumunda boş array ile devam et
-        setCategories([]);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchData();
-  }, []);
+  // Statik kategori listesi
+  const categories = [
+    "Bilgisayar",
+    "Telefon",
+    "Tablet",
+    "Kamera",
+    "Televizyon",
+    "Aksesuar",
+  ];
 
   function handleClick() {
     navigate("/menu");
@@ -62,16 +31,6 @@ export default function Home() {
 
   function navigateToCategory(category) {
     navigate(`/menu?category=${category}`);
-  }
-
-  // Loading state
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-50">
-        <div className="animate-spin rounded-full h-12 w-12 border-2 border-customGreen-600 border-t-transparent"></div>
-        <span className="ml-3 text-gray-600">Yükleniyor...</span>
-      </div>
-    );
   }
 
   return (
