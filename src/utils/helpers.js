@@ -20,5 +20,11 @@ export function formatDateTime(dateStr) {
 export function calculateRemainingTime(dateStr) {
   const now = new Date().getTime();
   const targetTime = new Date(dateStr).getTime();
-  return Math.round((targetTime - now) / 60000);
+  // Dakika yerine gün cinsinden kalan süreyi hesapla
+  return Math.ceil((targetTime - now) / (1000 * 60 * 60 * 24));
+}
+
+// ID'yi string formatına çevir - tutarlı tip için
+export function normalizeId(id) {
+  return String(id);
 }

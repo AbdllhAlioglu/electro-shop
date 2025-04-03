@@ -1,9 +1,9 @@
 import React from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import AppLayout from "./ui/AppLayout";
+import AppLayout from "./ui/layout/AppLayout";
 import Menu, { loader as MenuLoader } from "./features/menu/Menu";
 import Cart from "./features/cart/Cart";
-import Home from "./ui/Home";
+import Home from "./ui/pages/Home";
 import FavoritesProducts from "./features/menu/FavoritesProducts";
 import { loader as CartLoader } from "./features/cart/RecommendedProducts";
 import Profile from "./features/user/Profile";
@@ -14,7 +14,7 @@ import OrderForm, {
 import Order, { loader as orderLoader } from "./features/order/Order";
 import Orders, { loader as ordersLoader } from "./features/order/Orders";
 import ProtectedRoute from "./ui/ProtectedRoute";
-import PageNotFound from "./ui/PageNotFound";
+import PageNotFound from "./ui/pages/PageNotFound";
 
 const router = createBrowserRouter([
   {

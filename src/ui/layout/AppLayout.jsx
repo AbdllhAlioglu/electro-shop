@@ -2,11 +2,11 @@ import React from "react";
 import Header from "./Header";
 import Footer from "./Footer";
 import { Outlet } from "react-router-dom";
-import CartOverview from "../features/cart/CartOverview";
+import CartOverview from "../../features/cart/CartOverview";
 import { useSelector } from "react-redux";
-import logo from "/assets/Logo.svg";
-import { useAuth } from "../context/AuthContext";
-import AuthForm from "../features/auth/AuthForm";
+import logo from "/assets/icons/Logo.svg";
+import { useAuth } from "../../context/AuthContext";
+import AuthForm from "../../features/auth/AuthForm";
 
 export default function AppLayout() {
   const { isAuthenticated, isLoading } = useAuth();

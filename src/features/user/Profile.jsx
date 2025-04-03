@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { logout, fetchUserProfile } from "./userSlice";
 import { useNavigate } from "react-router-dom";
-import Button from "../../ui/Button";
+import Button from "../../ui/common/Button";
 import { useAuth } from "../../context/AuthContext";
 import { getUserOrders } from "../../services/authService";
 

@@ -1,145 +1,149 @@
 import React, { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
-  removeFromFavoritesAsync,
   fetchUserFavorites,
+  removeFromFavoritesAsync,
 } from "../menu/favoritesSlice";
+import { Link } from "react-router-dom";
 import { supabase } from "../../libs/supabase";
-import Button from "../../ui/Button";
 import NotFoundFavorite from "./NotFoundFavorite";
 import { formatCurrency } from "../../utils/helpers";
-import { useAuth } from "../../context/AuthContext";
-
-// Ensure consistent ID type (convert to string)
-const normalizeId = (id) => String(id);
+import { addToCart } from "../cart/cartSlice";
+import toast from "react-hot-toast";
+import Button from "../../ui/common/Button";
+import { normalizeId } from "../../utils/helpers";
 
 export default function FavoritesProducts() {
-  const { isAuthenticated } = useAuth();
-  const favorites = useSelector((state) => state.favorites.favorites);
   const dispatch = useDispatch();
+  const favorites = useSelector((state) => state.favorites.favorites);
   const [favoriteProducts, setFavoriteProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [removingItems, setRemovingItems] = useState(new Set());
 
-  // Kullanıcı oturumunu kontrol et ve favorileri yükle
+  // Favorileri Redux'tan yükle
   useEffect(() => {
-    if (isAuthenticated) {
-      dispatch(fetchUserFavorites());
+    dispatch(fetchUserFavorites());
+  }, [dispatch]);
+
+  // Favorilere ait ürünleri getir
+  async function fetchFavoriteProducts() {
+    if (!favorites.length) {
+      setFavoriteProducts([]);
+      setIsLoading(false);
+      return;
     }
-  }, [isAuthenticated, dispatch]);
 
-  // Favoriler güncellendiğinde ürünleri getir
-  useEffect(() => {
-    async function fetchFavoriteProducts() {
-      if (!favorites.length) {
+    try {
+      // Normalize all favorite IDs
+      const normalizedFavorites = favorites.map(normalizeId);
+
+      // Fetch products from Supabase that match favorite IDs
+      const { data, error } = await supabase
+        .from("products")
+        .select("*")
+        .in("id", normalizedFavorites);
+
+      if (error) {
         setFavoriteProducts([]);
         setIsLoading(false);
         return;
       }
 
-      try {
-        // Normalize all favorite IDs
-        const normalizedFavorites = favorites.map(normalizeId);
-
-        // Fetch products from Supabase that match favorite IDs
-        const { data, error } = await supabase
-          .from("products")
-          .select("*")
-          .in("id", normalizedFavorites);
-
-        if (error) {
-          console.error("Ürünleri yükleme hatası:", error);
-          throw error;
-        }
-
-        if (data) {
-          setFavoriteProducts(data);
-        } else {
-          setFavoriteProducts([]);
-        }
-      } catch (error) {
-        console.error("Favori ürünleri yükleme hatası:", error);
-        setFavoriteProducts([]);
-      } finally {
-        setIsLoading(false);
-      }
+      setFavoriteProducts(data);
+    } catch (error) {
+      setFavoriteProducts([]);
+    } finally {
+      setIsLoading(false);
     }
+  }
 
+  useEffect(() => {
     fetchFavoriteProducts();
   }, [favorites]);
 
   const handleRemoveFavorite = async (productId) => {
-    // Aynı ürün için işlem devam ediyorsa çık
-    if (removingItems.has(productId)) return;
-
     try {
-      // İşlem başladığını belirt
-      setRemovingItems((prev) => new Set([...prev, productId]));
-
-      // Favorilerden kaldır
-      await dispatch(removeFromFavoritesAsync(productId)).unwrap();
+      await dispatch(removeFromFavoritesAsync(productId));
+      toast.success("Ürün favorilerden kaldırıldı");
     } catch (error) {
-      console.error("Favori kaldırma hatası:", error);
-      alert("Favori kaldırılamadı: " + error);
-    } finally {
-      // İşlem bittiğini belirt
-      setRemovingItems((prev) => {
-        const newSet = new Set([...prev]);
-        newSet.delete(productId);
-        return newSet;
-      });
+      toast.error("İşlem sırasında bir hata oluştu");
     }
   };
 
-  // Yükleme ekranı
+  const handleAddToCart = (product) => {
+    dispatch(addToCart(product));
+    toast.success(`${product.name} sepete eklendi!`);
+  };
+
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center min-h-[60vh]">
-        <div className="text-lg font-medium text-gray-600">
-          Favoriler yükleniyor...
-        </div>
+      <div className="py-10">
+        <p className="text-center text-lg">Favoriler yükleniyor...</p>
       </div>
     );
   }
 
-  // Favori yoksa
   if (favoriteProducts.length === 0) {
     return <NotFoundFavorite />;
   }
 
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4 text-center">Favori Ürünler</h1>
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+    <div className="container mx-auto py-8 px-4">
+      <h1 className="text-2xl font-bold mb-6">Favori Ürünlerim</h1>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {favoriteProducts.map((product) => (
           <div
             key={product.id}
-            className="p-4 border rounded-lg shadow-md bg-white hover:shadow-lg transition-shadow duration-300"
+            className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200 transition-all hover:shadow-lg"
           >
-            <img
-              src={product.image}
-              alt={product.name}
-              className="w-full h-32 sm:h-40 object-contain rounded-lg mb-2"
-            />
-            <h2 className="text-sm sm:text-md font-semibold text-gray-800 mb-1 truncate">
-              {product.name}
-            </h2>
-            <p className="text-xs sm:text-sm text-gray-600 line-clamp-2 mb-2">
-              {product.description}
-            </p>
-            <span className="text-sm font-bold text-green-600 mb-2 block">
-              {formatCurrency(product.price)}
-            </span>
-            <Button
-              onClick={() => handleRemoveFavorite(product.id)}
-              type="small"
-              className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 transition-colors duration-200 text-xs sm:text-sm"
-              disabled={removingItems.has(product.id)}
-            >
-              {removingItems.has(product.id)
-                ? "Kaldırılıyor..."
-                : "Favorilerden Çıkar"}
-            </Button>
+            <Link to={`/menu/${product.id}`}>
+              <img
+                src={product.image}
+                alt={product.name}
+                className="w-full h-48 object-cover"
+              />
+            </Link>
+            <div className="p-4">
+              <Link to={`/menu/${product.id}`}>
+                <h2 className="text-lg font-semibold mb-2 hover:text-customGreen-600">
+                  {product.name}
+                </h2>
+              </Link>
+              <p className="text-gray-600 text-sm mb-4 line-clamp-2">
+                {product.description?.substring(0, 100)}
+                {product.description?.length > 100 ? "..." : ""}
+              </p>
+              <div className="flex justify-between items-center">
+                <span className="text-customGreen-700 font-bold">
+                  {formatCurrency(product.price)}
+                </span>
+                <button
+                  onClick={() => handleRemoveFavorite(product.id)}
+                  className="text-red-600 hover:text-red-700"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                    />
+                  </svg>
+                </button>
+              </div>
+              <Button
+                type="primary"
+                className="w-full mt-3"
+                onClick={() => handleAddToCart(product)}
+              >
+                Sepete Ekle
+              </Button>
+            </div>
           </div>
         ))}
       </div>

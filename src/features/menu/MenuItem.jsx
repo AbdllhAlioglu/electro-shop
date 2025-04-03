@@ -16,9 +16,32 @@ import {
 import { formatCurrency } from "../../utils/helpers";
 import { addToCart } from "../cart/cartSlice";
 import { useAuth } from "../../context/AuthContext";
+import { toast } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 // Ensure consistent ID type (convert to string)
 const normalizeId = (id) => String(id);
+
+// formatFeatures fonksiyonunu tanımla
+function formatFeatures(features) {
+  // Eğer features string ise JSON olarak parse etmeyi dene
+  if (typeof features === "string") {
+    try {
+      return JSON.parse(features);
+    } catch (error) {
+      // JSON değilse virgülle ayrılmış liste olarak kabul et
+      return features.split(",").map((item) => item.trim());
+    }
+  }
+
+  // Halihazırda array ise olduğu gibi döndür
+  if (Array.isArray(features)) {
+    return features;
+  }
+
+  // Hiçbiri değilse boş array döndür
+  return [];
+}
 
 export default function MenuItem({ product }) {
   const {
@@ -41,6 +64,7 @@ export default function MenuItem({ product }) {
   const [showLikeNotification, setShowLikeNotification] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [isProcessingFavorite, setIsProcessingFavorite] = useState(false);
+  const navigate = useNavigate();
 
   // Features'ı array formatına dönüştür
   const features = React.useMemo(() => {
@@ -55,7 +79,8 @@ export default function MenuItem({ product }) {
         return JSON.parse(rawFeatures);
       }
     } catch (error) {
-      console.error("Features parsing error:", error);
+      // JSON değilse virgülle ayrılmış liste olarak kabul et
+      return rawFeatures.split(",").map((item) => item.trim());
     }
 
     // Eğer string ama JSON formatında değilse veya başka bir tip ise
@@ -196,13 +221,13 @@ export default function MenuItem({ product }) {
       {/* Notification Badges */}
       {showCartNotification && (
         <div className="absolute top-4 right-4 z-30 bg-customGreen-500 text-white px-3 py-1.5 rounded-lg shadow-lg animate-fade-left">
-          Added to cart!
+          Sepete Eklendi
         </div>
       )}
 
       {showLikeNotification && (
         <div className="absolute top-4 left-4 z-30 bg-customGreen-500 text-white px-3 py-1.5 rounded-lg shadow-lg animate-fade-right">
-          {isLiked ? "Added to favorites!" : "Removed from favorites!"}
+          {isLiked ? "Favorilere Eklendi" : "Favorilerden Kaldırıldı"}
         </div>
       )}
 
@@ -234,7 +259,7 @@ export default function MenuItem({ product }) {
         <img
           src={image}
           alt={name}
-          className={`absolute inset-0 w-full h-full object-contain p-6 transform transition-all duration-300 ${
+          className={`absolute inset-0 w-full h-full object-contain p-4  transform transition-all duration-300  ${
             isHovered ? "scale-110" : "scale-100"
           }`}
         />

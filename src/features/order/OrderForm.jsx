@@ -1,14 +1,16 @@
 import React, { useState } from "react";
 import { Form, redirect, useActionData, useNavigation } from "react-router-dom";
 import { createOrder } from "../../services/orderService";
-import Button from "../../ui/Button";
+import Button from "../../ui/common/Button";
 import { useSelector } from "react-redux";
 import { getCart } from "../cart/cartSlice";
-import { getAddress } from "../../services/adressService";
+import { getAddress } from "../../services/addressService";
 import toast from "react-hot-toast";
 import store from "../../store";
 import { orderCreatedSuccess } from "./orderSlice";
 import { formatCurrency } from "../../utils/helpers";
+import Cards from "react-credit-cards";
+import "react-credit-cards/es/styles-compiled.css";
 
 // Benzersiz ID oluştur
 function createOrderId() {
@@ -25,14 +27,25 @@ const isValidPhone = (str) =>
 function OrderForm() {
   const [address, setAddress] = useState("");
   const [isFetchingAddress, setIsFetchingAddress] = useState(false);
+  const [creditCard, setCreditCard] = useState({
+    number: "",
+    name: "",
+    expiry: "",
+    cvc: "",
+    focus: "",
+  });
+  const [isPriority, setIsPriority] = useState(false);
 
   const userName = useSelector((state) => state.user.userName);
   const cart = useSelector(getCart);
   const discount = useSelector((state) => state.cart.discount);
+  const user = useSelector((state) => state.user.user);
 
   // Toplam fiyat hesaplama
   const totalCartPrice = cart.reduce((acc, item) => acc + item.totalPrice, 0);
   const discountedPrice = totalCartPrice * (1 - discount / 100);
+  const priorityFee = isPriority ? discountedPrice * 0.1 : 0;
+  const finalPrice = discountedPrice + priorityFee;
 
   const navigation = useNavigation();
   const isSubmitting = navigation.state === "submitting";
@@ -53,7 +66,6 @@ function OrderForm() {
           const data = await getAddress({ latitude, longitude });
           setAddress(data.locality || data.city || "Address not found");
         } catch (error) {
-          console.error("Error fetching address:", error);
           alert("Failed to fetch your address. Please try again.");
         } finally {
           setIsFetchingAddress(false);
@@ -66,103 +78,249 @@ function OrderForm() {
     );
   };
 
+  const handleCardInputChange = (e) => {
+    const { name, value } = e.target;
+    setCreditCard((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleCardInputFocus = (e) => {
+    setCreditCard((prev) => ({ ...prev, focus: e.target.name }));
+  };
+
+  const handlePriorityChange = (e) => {
+    setIsPriority(e.target.checked);
+  };
+
   return (
-    <div className="px-4 py-6">
-      <h2 className="mb-8 text-xl font-semibold">
-        Sipariş vermeye hazır mısınız? Hadi başlayalım!
-      </h2>
+    <div className="max-w-5xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
+      <div className="bg-gradient-to-r from-indigo-600 to-purple-600 py-5 px-6">
+        <h2 className="text-2xl font-bold text-white">
+          Ödeme İşlemini Tamamlayın
+        </h2>
+        <p className="text-indigo-100">
+          Siparişinizi güvenle tamamlamak için lütfen bilgilerinizi girin
+        </p>
+      </div>
 
-      <Form method="POST">
-        <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center">
-          <label className="sm:basis-40">Ad Soyad</label>
-          <input
-            className="input grow"
-            type="text"
-            name="customer"
-            required
-            defaultValue={userName}
-          />
-        </div>
-
-        <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center">
-          <label className="sm:basis-40">Telefon Numarası</label>
-          <div className="grow">
-            <input className="input w-full" type="tel" name="phone" required />
-            {formErrors?.phone && (
-              <p className="mt-2 rounded-md bg-red-100 p-2 text-xs text-red-700">
-                {formErrors.phone}
-              </p>
-            )}
-          </div>
-        </div>
-
-        <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center">
-          <label className="sm:basis-40">Adres</label>
-          <div className="grow">
-            <div className="relative w-full">
-              <input
-                className="input w-full pr-32 sm:pr-36 md:pr-40 lg:pr-44"
-                type="text"
-                name="address"
-                required
-                value={address}
-                onChange={(e) => setAddress(e.target.value)}
-              />
-              <button
-                type="button"
-                onClick={handleGetLocation}
-                className="absolute right-4 sm:right-6 top-1/2 transform -translate-y-1/2 bg-customGreen-200 px-2 py-1 sm:px-4 sm:py-2 text-sm sm:text-base lg:text-lg text-white hover:customGreen-300 focus:outline-none focus:ring focus:ring-customGreen-200 focus:ring-offset-2 rounded-full w-1/4 sm:w-1/5 lg:w-1/6"
-                disabled={isFetchingAddress}
-              >
-                {isFetchingAddress ? "Yükleniyor..." : "Konum Al"}
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div className="mb-12 flex items-center gap-5">
-          <input
-            className="h-6 w-6 accent-yellow-400 focus:outline-none focus:ring focus:ring-yellow-400 focus:ring-offset-2"
-            type="checkbox"
-            name="priority"
-            id="priority"
-          />
-          <label htmlFor="priority" className="font-medium">
-            Siparişinize öncelik vermek ister misiniz?
-          </label>
-        </div>
-
-        {/* Sipariş Özeti */}
-        <div className="mb-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
-          <h3 className="text-lg font-semibold mb-3">Sipariş Özeti</h3>
-
-          <div className="flex justify-between mb-2">
-            <span>Ara Toplam:</span>
-            <span>{formatCurrency(totalCartPrice)}</span>
-          </div>
-
-          {discount > 0 && (
-            <div className="flex justify-between mb-2 text-customGreen-600">
-              <span>İndirim ({discount}%):</span>
-              <span>-{formatCurrency(totalCartPrice - discountedPrice)}</span>
-            </div>
-          )}
-
-          <div className="flex justify-between pt-2 border-t border-gray-200 font-semibold">
-            <span>Toplam:</span>
-            <span>{formatCurrency(discountedPrice)}</span>
-          </div>
-        </div>
-
+      <div className="p-6 md:p-8 grid grid-cols-1 md:grid-cols-2 gap-8">
         <div>
-          <input type="hidden" name="cart" value={JSON.stringify(cart)} />
-          <input type="hidden" name="discount" value={discount} />
-          <input type="hidden" name="discountedTotal" value={discountedPrice} />
-          <Button disabled={isSubmitting} type="primary">
-            {isSubmitting ? "Sipariş veriliyor..." : "Şimdi Sipariş Ver"}
-          </Button>
+          <h3 className="text-lg font-semibold mb-4 text-gray-800">
+            Teslimat Bilgileri
+          </h3>
+          <Form method="POST" className="space-y-4">
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">
+                Ad Soyad
+              </label>
+              <input
+                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                type="text"
+                name="customer"
+                required
+                defaultValue={userName}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">
+                Telefon Numarası
+              </label>
+              <input
+                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                type="tel"
+                name="phone"
+                required
+              />
+              {formErrors?.phone && (
+                <p className="mt-1 text-sm text-red-600">{formErrors.phone}</p>
+              )}
+            </div>
+
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">
+                Adres
+              </label>
+              <div className="relative">
+                <input
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  type="text"
+                  name="address"
+                  required
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+                />
+                <button
+                  type="button"
+                  onClick={handleGetLocation}
+                  className="absolute right-2 top-2 bg-indigo-100 text-indigo-700 px-2 py-1 rounded text-sm font-medium hover:bg-indigo-200"
+                  disabled={isFetchingAddress}
+                >
+                  {isFetchingAddress ? "Yükleniyor..." : "Konum Al"}
+                </button>
+              </div>
+            </div>
+
+            <div className="flex items-center mt-4">
+              <input
+                className="h-5 w-5 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                type="checkbox"
+                name="priority"
+                id="priority"
+                checked={isPriority}
+                onChange={handlePriorityChange}
+              />
+              <label htmlFor="priority" className="ml-2 text-sm text-gray-700">
+                Hızlı teslimat istiyorum (+10%)
+              </label>
+            </div>
+
+            {/* Kredi Kartı Bilgileri - Hidden fields */}
+            <input type="hidden" name="cart" value={JSON.stringify(cart)} />
+            <input type="hidden" name="discount" value={discount} />
+            <input type="hidden" name="discountedTotal" value={finalPrice} />
+            <input type="hidden" name="userId" value={user?.id || ""} />
+            <input type="hidden" name="cardNumber" value={creditCard.number} />
+            <input type="hidden" name="cardName" value={creditCard.name} />
+            <input type="hidden" name="cardExpiry" value={creditCard.expiry} />
+
+            {/* Sipariş Özeti */}
+            <div className="mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
+              <h3 className="text-base font-medium text-gray-800 mb-3">
+                Sipariş Özeti
+              </h3>
+
+              <div className="flex justify-between mb-2 text-sm">
+                <span>Ara Toplam:</span>
+                <span>{formatCurrency(totalCartPrice)}</span>
+              </div>
+
+              {discount > 0 && (
+                <div className="flex justify-between mb-2 text-sm text-green-600">
+                  <span>İndirim ({discount}%):</span>
+                  <span>
+                    -{formatCurrency(totalCartPrice - discountedPrice)}
+                  </span>
+                </div>
+              )}
+
+              {isPriority && (
+                <div className="flex justify-between mb-2 text-sm text-indigo-600">
+                  <span>Hızlı Teslimat (+10%):</span>
+                  <span>+{formatCurrency(priorityFee)}</span>
+                </div>
+              )}
+
+              <div className="flex justify-between pt-2 border-t border-gray-200 font-semibold text-lg">
+                <span>Toplam:</span>
+                <span>{formatCurrency(finalPrice)}</span>
+              </div>
+            </div>
+
+            <div>
+              <Button
+                disabled={isSubmitting}
+                type="primary"
+                className="w-full mt-4"
+              >
+                {isSubmitting
+                  ? "İşleminiz gerçekleştiriliyor..."
+                  : "Ödemeyi Tamamla"}
+              </Button>
+            </div>
+          </Form>
         </div>
-      </Form>
+
+        <div className="space-y-6">
+          <h3 className="text-lg font-semibold mb-4 text-gray-800">
+            Ödeme Bilgileri
+          </h3>
+
+          <div className="mb-4">
+            <Cards
+              number={creditCard.number}
+              name={creditCard.name}
+              expiry={creditCard.expiry}
+              cvc={creditCard.cvc}
+              focused={creditCard.focus}
+            />
+          </div>
+
+          <div className="space-y-4 mt-4">
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">
+                Kart Üzerindeki İsim
+              </label>
+              <input
+                type="text"
+                name="name"
+                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                placeholder="AD SOYAD"
+                value={creditCard.name}
+                onChange={handleCardInputChange}
+                onFocus={handleCardInputFocus}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">
+                Kart Numarası
+              </label>
+              <input
+                type="text"
+                name="number"
+                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                placeholder="**** **** **** ****"
+                maxLength="16"
+                value={creditCard.number}
+                onChange={handleCardInputChange}
+                onFocus={handleCardInputFocus}
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <label className="block text-sm font-medium text-gray-700">
+                  Son Kullanma Tarihi
+                </label>
+                <input
+                  type="text"
+                  name="expiry"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  placeholder="AA/YY"
+                  maxLength="4"
+                  value={creditCard.expiry}
+                  onChange={handleCardInputChange}
+                  onFocus={handleCardInputFocus}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="block text-sm font-medium text-gray-700">
+                  CVC
+                </label>
+                <input
+                  type="text"
+                  name="cvc"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  placeholder="***"
+                  maxLength="3"
+                  value={creditCard.cvc}
+                  onChange={handleCardInputChange}
+                  onFocus={handleCardInputFocus}
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-4 p-4 bg-blue-50 text-blue-700 rounded-md">
+            <p className="text-sm">
+              <span className="font-medium">Güvenli Ödeme:</span> Tüm ödeme
+              bilgileri 256-bit SSL ile şifrelenir ve hiçbir şekilde kart
+              bilgileriniz saklanmaz.
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
@@ -194,19 +352,13 @@ export async function action({ request }) {
   try {
     // Send order to Supabase
     const newOrder = await createOrder(order);
-    console.log("Order successfully created with ID:", newOrder.id);
 
     // Dispatch success action to Redux - will trigger toast in Order component
-    console.log("Dispatching orderCreatedSuccess action with ID:", newOrder.id);
     store.dispatch(orderCreatedSuccess(newOrder.id));
-
-    // Clear cart in Redux store handled in createOrder function
 
     // Redirect to order detail page
     return redirect(`/order/${newOrder.id}`);
   } catch (err) {
-    console.error("Order creation failed:", err);
-
     // For errors, we can show toast directly as we're not redirecting
     toast.error("Sipariş oluşturulamadı: " + err.message);
 

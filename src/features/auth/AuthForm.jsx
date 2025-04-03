@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { login, register } from "../user/userSlice";
-import Button from "../../ui/Button";
+import Button from "../../ui/common/Button";
 import {
   FaEnvelope,
   FaLock,

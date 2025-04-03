@@ -7,13 +7,6 @@ import store from "./store.js";
 import { AuthProvider } from "./context/AuthContext";
 import { Toaster } from "react-hot-toast";
 
-// Environment değişkenlerini kontrol et
-console.log("ENV Check:", {
-  SUPABASE_URL: import.meta.env.VITE_SUPABASE_URL,
-  SUPABASE_KEY: import.meta.env.VITE_SUPABASE_KEY,
-  MODE: import.meta.env.MODE,
-});
-
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <Provider store={store}>

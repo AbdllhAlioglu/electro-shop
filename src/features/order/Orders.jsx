@@ -5,99 +5,65 @@ import { formatCurrency, formatDateTime } from "../../utils/helpers";
 
 function Orders() {
   const orders = useLoaderData();
-  console.log("Orders loaded:", orders);
 
-  // discount price
-
-  // Sipariş verilerini kontrol et
-  if (!orders) {
-    console.warn("Orders data is undefined");
+  // Siparişlerin array olup olmadığını kontrol et (veri yoksa veya array değilse)
+  if (!orders || !Array.isArray(orders) || orders.length === 0) {
     return (
-      <div className="p-8 text-center">
-        <h1 className="mb-4 text-xl font-semibold text-stone-700">
-          Siparişler Yüklenemedi
-        </h1>
-        <p className="text-stone-500 mb-6">
-          Sipariş verilerinizi yüklerken bir sorun oluştu. Lütfen daha sonra
-          tekrar deneyin.
+      <div className="py-10 px-4 text-center">
+        <h2 className="text-xl font-semibold mb-4">
+          Henüz hiç siparişiniz yok!
+        </h2>
+        <p className="text-gray-500 mb-8">
+          Menüden favori ürünlerinizi seçerek sipariş verebilirsiniz.
         </p>
         <Link
           to="/menu"
-          className="text-sm bg-customGreen-500 text-white px-4 py-2 rounded-md hover:bg-customGreen-600 transition-colors"
+          className="bg-customGreen-500 text-white px-6 py-3 rounded-full font-medium hover:bg-customGreen-600 transition-colors"
         >
-          Alışverişe Devam Et
-        </Link>
-      </div>
-    );
-  }
-
-  if (!orders.length) {
-    console.log("No orders found to display");
-    return (
-      <div className="p-8 text-center">
-        <h1 className="mb-4 text-xl font-semibold text-stone-700">
-          Sipariş Bulunamadı
-        </h1>
-        <p className="text-stone-500 mb-6">Henüz hiç sipariş vermediniz.</p>
-        <Link
-          to="/menu"
-          className="text-sm bg-customGreen-500 text-white px-4 py-2 rounded-md hover:bg-customGreen-600 transition-colors"
-        >
-          Alışverişe Başla
+          Menüye Git
         </Link>
       </div>
     );
   }
 
   return (
-    <div className="px-4 py-8 max-w-5xl mx-auto">
-      <h1 className="text-2xl font-bold mb-8 text-gray-800">Siparişlerim</h1>
+    <div className="p-4 lg:px-8">
+      <h2 className="text-xl font-semibold mb-6">Sipariş Geçmişiniz</h2>
 
-      <div className="grid grid-cols-1 gap-6">
+      <div className="space-y-6">
         {orders.map((order) => (
           <Link
-            key={order.id}
             to={`/order/${order.id}`}
-            className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 transition-all hover:shadow-md"
+            key={order.id}
+            className="block p-4 sm:p-6 bg-white rounded-lg border border-gray-200 transition-shadow hover:shadow-md"
           >
-            <div className="flex flex-wrap justify-between gap-2 mb-4 pb-4 border-b border-gray-100">
-              <div>
-                <span className="text-sm text-gray-500">Sipariş No:</span>
-                <p className="font-semibold text-gray-800">
-                  #{order.id.slice(0, 8)}
-                </p>
-              </div>
-              <div>
-                <span className="text-sm text-gray-500">Sipariş Tarihi:</span>
-                <p className="font-medium">
-                  {formatDateTime(order.created_at)}
-                </p>
-              </div>
-              <div>
-                <span className="text-sm text-gray-500">Toplam Tutar:</span>
-                <p className="font-semibold text-customGreen-700">
-                  {formatCurrency(order.discountedTotal || order.totalPrice)}
-                </p>
-              </div>
+            <div className="flex flex-wrap items-center justify-between gap-2 mb-2 md:mb-4">
+              <p className="font-medium">Sipariş #{order.id.slice(0, 5)}</p>
+              <time
+                dateTime={order.created_at}
+                className="text-sm text-gray-500"
+              >
+                {formatDateTime(order.created_at)}
+              </time>
             </div>
 
-            <div className="flex flex-wrap gap-4 items-center justify-between">
-              <div className="flex flex-col">
-                <span className="text-sm text-gray-500">Teslimat Adresi:</span>
-                <p className="text-gray-700 truncate max-w-xs">
-                  {order.address}
-                </p>
-              </div>
-
-              <div className="flex gap-2 items-center">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <div className="space-x-2">
                 {order.priority && (
-                  <span className="bg-red-100 text-red-800 text-xs px-2 py-1 rounded-full">
+                  <span className="inline-block bg-red-100 text-red-800 py-1 px-3 text-xs sm:text-sm font-medium rounded-full">
                     Hızlı Teslimat
                   </span>
                 )}
-                <span className="inline-flex items-center rounded-md bg-customGreen-50 px-2 py-1 text-xs font-medium text-customGreen-700 ring-1 ring-inset ring-customGreen-600/20">
-                  Detayları Görüntüle
+                <span className="inline-block bg-blue-100 text-blue-800 py-1 px-3 text-xs sm:text-sm font-medium rounded-full">
+                  {(order.cart || []).reduce(
+                    (sum, item) => sum + item.quantity,
+                    0
+                  )}{" "}
+                  Ürün
                 </span>
+              </div>
+              <div className="font-medium text-customGreen-700">
+                {formatCurrency(order.discounted_total || order.total || 0)}
               </div>
             </div>
           </Link>
@@ -109,13 +75,9 @@ function Orders() {
 
 export async function loader() {
   try {
-    console.log("Orders loader starting...");
     const orders = await getAllOrders();
-    console.log("Orders loader finished, data:", orders);
     return orders;
   } catch (error) {
-    console.error("Error in orders loader:", error);
-    // Boş array döndür ki sayfa yüklenirken hata oluşmasın
     return [];
   }
 }

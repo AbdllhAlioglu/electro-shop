@@ -8,6 +8,33 @@ import {
 // Ensure consistent ID type (convert to string)
 const normalizeId = (id) => String(id);
 
+// LocalStorage'dan favorileri yükle
+const loadFavoritesFromStorage = () => {
+  try {
+    const storedFavorites = localStorage.getItem("favorites");
+    return {
+      favorites: storedFavorites ? JSON.parse(storedFavorites) : [],
+      status: "idle",
+      error: null,
+    };
+  } catch (error) {
+    return {
+      favorites: [],
+      status: "idle",
+      error: null,
+    };
+  }
+};
+
+// LocalStorage'e favorileri kaydet
+const saveFavoritesToStorage = (favorites) => {
+  try {
+    localStorage.setItem("favorites", JSON.stringify(favorites));
+  } catch (error) {
+    // Hata olursa sessizce devam et
+  }
+};
+
 // Async thunk to fetch user favorites
 export const fetchUserFavorites = createAsyncThunk(
   "favorites/fetchUserFavorites",
@@ -15,9 +42,13 @@ export const fetchUserFavorites = createAsyncThunk(
     try {
       const userId = getState().user?.user?.id;
       if (!userId) {
-        return [];
+        // Kullanıcı giriş yapmamışsa, localStorage'dan favorileri döndür
+        const localFavorites = localStorage.getItem("favorites");
+        return localFavorites ? JSON.parse(localFavorites) : [];
       }
       const favorites = await getUserFavorites(userId);
+      // Veritabanından çekilen favorileri localStorage'a da kaydet
+      saveFavoritesToStorage(favorites);
       return favorites;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -32,7 +63,16 @@ export const addToFavoritesAsync = createAsyncThunk(
     try {
       const userId = getState().user?.user?.id;
       if (!userId) {
-        return rejectWithValue("Kullanıcı giriş yapmamış");
+        // Kullanıcı giriş yapmamışsa, sadece localStorage'a ekle
+        const localFavorites = localStorage.getItem("favorites");
+        const favorites = localFavorites ? JSON.parse(localFavorites) : [];
+        const normalizedId = normalizeId(productId);
+
+        if (!favorites.map(normalizeId).includes(normalizedId)) {
+          favorites.push(normalizedId);
+          saveFavoritesToStorage(favorites);
+        }
+        return normalizedId;
       }
 
       const success = await addProductToFavorites(userId, productId);
@@ -53,7 +93,16 @@ export const removeFromFavoritesAsync = createAsyncThunk(
     try {
       const userId = getState().user?.user?.id;
       if (!userId) {
-        return rejectWithValue("Kullanıcı giriş yapmamış");
+        // Kullanıcı giriş yapmamışsa, sadece localStorage'dan çıkar
+        const localFavorites = localStorage.getItem("favorites");
+        const favorites = localFavorites ? JSON.parse(localFavorites) : [];
+        const normalizedId = normalizeId(productId);
+
+        const updatedFavorites = favorites.filter(
+          (id) => normalizeId(id) !== normalizedId
+        );
+        saveFavoritesToStorage(updatedFavorites);
+        return normalizedId;
       }
 
       const success = await removeProductFromFavorites(userId, productId);
@@ -68,11 +117,7 @@ export const removeFromFavoritesAsync = createAsyncThunk(
 );
 
 // Başlangıç durumu
-const initialState = {
-  favorites: [],
-  status: "idle", // 'idle' | 'loading' | 'succeeded' | 'failed'
-  error: null,
-};
+const initialState = loadFavoritesFromStorage();
 
 // Slice oluşturuluyor
 const favoritesSlice = createSlice({
@@ -85,6 +130,7 @@ const favoritesSlice = createSlice({
       // Ürün zaten favorilerde değilse id ekle
       if (!state.favorites.map(normalizeId).includes(normalizedId)) {
         state.favorites.push(normalizedId); // id ekleniyor
+        saveFavoritesToStorage(state.favorites);
       }
     },
     removeFromFavorites: (state, action) => {
@@ -94,10 +140,12 @@ const favoritesSlice = createSlice({
       state.favorites = state.favorites.filter(
         (id) => normalizeId(id) !== normalizedId
       );
+      saveFavoritesToStorage(state.favorites);
     },
     // Kullanıcı çıkış yaptığında favorileri temizle
     clearFavorites: (state) => {
       state.favorites = [];
+      saveFavoritesToStorage(state.favorites);
     },
   },
   extraReducers: (builder) => {
@@ -109,6 +157,7 @@ const favoritesSlice = createSlice({
       .addCase(fetchUserFavorites.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.favorites = action.payload;
+        saveFavoritesToStorage(state.favorites);
       })
       .addCase(fetchUserFavorites.rejected, (state, action) => {
         state.status = "failed";
@@ -119,6 +168,7 @@ const favoritesSlice = createSlice({
         const normalizedId = action.payload;
         if (!state.favorites.map(normalizeId).includes(normalizedId)) {
           state.favorites.push(normalizedId);
+          saveFavoritesToStorage(state.favorites);
         }
       })
       // Remove from favorites cases
@@ -127,6 +177,7 @@ const favoritesSlice = createSlice({
         state.favorites = state.favorites.filter(
           (id) => normalizeId(id) !== normalizedId
         );
+        saveFavoritesToStorage(state.favorites);
       });
   },
 });

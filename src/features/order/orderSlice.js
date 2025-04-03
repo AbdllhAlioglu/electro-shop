@@ -1,23 +1,22 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  orderCreated: false,
-  currentOrderId: null,
+  orderCreated: false, // Yeni bir sipariş oluşturuldu mu?
+  currentOrderId: null, // En son oluşturulan siparişin ID'si
 };
 
 const orderSlice = createSlice({
   name: "order",
   initialState,
   reducers: {
-    orderCreatedSuccess(state, action) {
-      console.log("orderCreatedSuccess reducer called with:", action.payload);
+    // Sipariş başarıyla oluşturulduğunda çağrılır
+    orderCreatedSuccess: (state, action) => {
       state.orderCreated = true;
       state.currentOrderId = action.payload;
     },
-    resetOrderCreated(state) {
-      console.log("resetOrderCreated reducer called");
+    // Toast bildirimi gösterildikten sonra state'i sıfırla
+    resetOrderCreated: (state) => {
       state.orderCreated = false;
-      state.currentOrderId = null;
     },
   },
 });

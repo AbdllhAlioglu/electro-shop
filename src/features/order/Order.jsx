@@ -16,29 +16,22 @@ function Order() {
   const dispatch = useDispatch();
   const { orderCreated, currentOrderId } = useSelector((state) => state.order);
 
-  // Veriyi kontrol et
-  console.log("Order data loaded:", order);
-
   // Eğer order.cart tanımlanmamışsa, boş bir array olarak ayarla
   if (!order.cart) {
-    console.warn("Order.cart is undefined, setting to empty array");
     order.cart = [];
   }
 
   // Sipariş başarıyla oluşturulduğunda toast bildirimini göster
   useEffect(() => {
-    console.log("Order component useEffect - Redux state:", {
-      orderCreated,
-      currentOrderId,
-      orderId: order.id,
-    });
-
+    // Eğer sipariş yeni oluşturulduysa ve currentOrderId bu siparişe eşitse
     if (orderCreated && currentOrderId === order.id) {
-      console.log("Showing success toast notification!");
-      // Toast bildirimi göster
-      toast.success("Siparişiniz başarıyla oluşturuldu!");
-      // Bildirimi sıfırla (tekrar göstermeyi engelle)
+      // Önce bildirim state'ini sıfırla (burada önemli - toast'tan önce gerçekleşecek)
       dispatch(resetOrderCreated());
+
+      // Toast bildirimi göster (bir sonraki render'da tekrar çalışmayacak)
+      setTimeout(() => {
+        toast.success("Siparişiniz başarıyla oluşturuldu!");
+      }, 100);
     }
   }, [orderCreated, currentOrderId, order.id, dispatch]);
 
@@ -46,7 +39,10 @@ function Order() {
     id,
     priority: expressDelivery,
     cart: items = [],
-    deliveryTime = Date.now() + 30 * 60 * 1000,
+    // Teslimat süresi: normal=5 gün, express=2 gün
+    deliveryTime = expressDelivery
+      ? Date.now() + 2 * 24 * 60 * 60 * 1000 // Hızlı teslimat: 2 gün
+      : Date.now() + 5 * 24 * 60 * 60 * 1000, // Normal teslimat: 5 gün
     discount = 0,
     discountedTotal = 0,
   } = order;
@@ -73,7 +69,7 @@ function Order() {
           )}
           {timeLeft > 0 && (
             <div className="bg-customGreen-100 text-customGreen-800 inline-block rounded-full px-3 py-1 text-sm">
-              <span className="font-semibold">{timeLeft} dakika</span> içinde
+              <span className="font-semibold">{timeLeft} gün</span> içinde
               teslim edilecek
             </div>
           )}

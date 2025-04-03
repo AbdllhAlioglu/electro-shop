@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { clearCart, applyDiscount, clearDiscount } from "./cartSlice";
-import LinkButton from "../../ui/LinkButton";
-import Button from "../../ui/Button";
+import LinkButton from "../../ui/common/LinkButton";
+import Button from "../../ui/common/Button";
 import CartItem from "./CartItem";
 import EmptyCart from "./EmptyCart";
 import RecommendedProducts from "./RecommendedProducts";
@@ -14,10 +14,9 @@ function Cart() {
   const cart = useSelector((state) => state.cart.cart);
   const discount = useSelector((state) => state.cart.discount);
   const dispatch = useDispatch();
+
   const [coupon, setCoupon] = useState("");
   const [isCouponApplied, setIsCouponApplied] = useState(false);
-  const [isValidatingCoupon, setIsValidatingCoupon] = useState(false);
-  const [couponError, setCouponError] = useState("");
 
   const totalCartPrice = useSelector((state) =>
     state.cart.cart.reduce((acc, item) => acc + item.totalPrice, 0)
@@ -32,48 +31,16 @@ function Cart() {
     }
   };
 
-  const handleApplyCoupon = async () => {
-    if (!coupon.trim()) {
-      setCouponError("Lütfen bir kupon kodu giriniz");
-      return;
-    }
-
-    setIsValidatingCoupon(true);
-    setCouponError("");
-
-    try {
-      // Kupon kodunu veritabanından kontrol et
-      // NOT: Gerçek bir veritabanı kontrolü yapılabilir
-      // Bu örnekte basit bir kontrol yapıyoruz
-
-      // Gerçek bir uygulama için veritabanında kupon kodunu kontrol edebilirsiniz:
-      // const { data, error } = await supabase
-      //   .from("coupons")
-      //   .select("*")
-      //   .eq("code", coupon)
-      //   .single();
-
-      // Şimdilik basit bir kontrol yapalım
-      await new Promise((resolve) => setTimeout(resolve, 600)); // Simüle edilmiş API çağrısı
-
-      if (coupon === "Alioğlu") {
-        dispatch(applyDiscount(20)); // %20 indirim uygula
-        setIsCouponApplied(true);
-        setCoupon("");
-        setCouponError("");
-        // Başarı bildirimi göster
-        toast.success("Kupon uygulandı! %20 indirim kazandınız.");
-      } else {
-        // Kupon bulunamadı veya geçersiz
-        setCouponError("Geçersiz kupon kodu");
-        dispatch(clearDiscount()); // Önceki indirimi temizle
-        setIsCouponApplied(false);
-      }
-    } catch (error) {
-      console.error("Error validating coupon:", error);
-      setCouponError("Kupon doğrulanırken hata oluştu");
-    } finally {
-      setIsValidatingCoupon(false);
+  const handleApplyCoupon = () => {
+    if (coupon.trim().toLowerCase() === "alioğlu") {
+      dispatch(applyDiscount(10));
+      setIsCouponApplied(true);
+      setCoupon("");
+      toast.success("Kupon başarıyla uygulandı! %10 indirim kazandınız.");
+    } else {
+      toast.error("Geçersiz kupon kodu!");
+      dispatch(clearDiscount());
+      setIsCouponApplied(false);
     }
   };
 
@@ -81,7 +48,6 @@ function Cart() {
     dispatch(clearDiscount());
     setIsCouponApplied(false);
     setCoupon("");
-    setCouponError("");
   };
 
   if (!cart.length) return <EmptyCart />;
@@ -131,12 +97,9 @@ function Cart() {
               placeholder={
                 isCouponApplied ? "Kupon uygulandı" : "Kupon kodu girin"
               }
-              disabled={isCouponApplied || isValidatingCoupon}
+              disabled={isCouponApplied}
               className="border p-2 rounded input w-full"
             />
-            {couponError && (
-              <p className="text-red-500 text-xs mt-1">{couponError}</p>
-            )}
           </div>
 
           {isCouponApplied ? (
@@ -148,12 +111,8 @@ function Cart() {
               Kaldır
             </Button>
           ) : (
-            <Button
-              type="small"
-              onClick={handleApplyCoupon}
-              disabled={isValidatingCoupon}
-            >
-              {isValidatingCoupon ? "Doğrulanıyor..." : "Uygula"}
+            <Button type="small" onClick={handleApplyCoupon}>
+              Uygula
             </Button>
           )}
         </div>

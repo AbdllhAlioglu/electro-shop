@@ -1,4 +1,4 @@
-import Button from "../../ui/Button";
+import Button from "../../ui/common/Button";
 import { formatCurrency } from "../../utils/helpers";
 import { useDispatch } from "react-redux";
 import { removeFromCart } from "./cartSlice";

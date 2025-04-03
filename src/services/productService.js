@@ -1,13 +1,12 @@
 // services/productService.js
 
 import { supabase } from "../libs/supabase";
-import { getOrder, createOrder } from "./orderService";
+// Döngüsel bağımlılık oluşturmaması için bu import ifadesini kaldıralım
+// import { getOrder, createOrder } from "./orderService";
 
 // Get menu (products) from Supabase
 export const getMenu = async () => {
   try {
-    console.log("Fetching products from Supabase...");
-
     // Supabase'den ürünleri çek
     const { data: rawProducts, error } = await supabase
       .from("products")
@@ -15,24 +14,23 @@ export const getMenu = async () => {
 
     // Eğer hata varsa
     if (error) {
-      console.error("Error fetching products from Supabase:", error);
-
-      // API anahtarı hatası mı kontrol et
-      if (error.message.includes("Invalid API key")) {
-        console.error(
-          "API anahtarı geçersiz. Lütfen Supabase projenizden doğru anahtarı kopyalayıp kontrol edin."
+      // Supabase yapılandırma kontrolü
+      if (
+        error.message &&
+        (error.message.includes("JWT") || error.message.includes("key"))
+      ) {
+        throw new Error(
+          "Supabase API anahtarı geçersiz veya eksik. Lütfen .env dosyanızı kontrol edin."
         );
       }
 
-      // Tablo erişim hatası mı kontrol et
-      if (error.message.includes("permission denied")) {
-        console.error(
-          "Tablo erişim hatası. RLS (Row Level Security) ayarlarınızı kontrol edin."
+      if (error.message && error.message.includes("permission denied")) {
+        throw new Error(
+          "Supabase erişim hatası: Tablo erişim izinlerini (RLS) kontrol edin."
         );
       }
 
-      // Fallback: Local JSON'dan veri çek
-      console.log("Falling back to local data...");
+      // Genel hata durumunda fallback
       const response = await fetch("db.json");
       const data = await response.json();
       return data.products;
@@ -64,21 +62,73 @@ export const getMenu = async () => {
       };
     });
 
-    console.log("Successfully fetched products:", products?.length);
     return products; // Return the products
   } catch (error) {
-    console.error("Error fetching products:", error);
     // Fallback: Local JSON'dan veri çek
     try {
       const response = await fetch("db.json");
       const data = await response.json();
       return data.products;
     } catch (fallbackError) {
-      console.error("Fallback also failed:", fallbackError);
       return []; // Return an empty array if all fails
     }
   }
 };
 
-// sipariş işlevleri için orderService.js'e yönlendirme
-export { getOrder, createOrder };
+// Ürün stoğunu güncelle
+export const updateProductStock = async (productId, quantityToReduce) => {
+  try {
+    // Önce ürünün mevcut stok bilgisini al
+    const { data: product, error: fetchError } = await supabase
+      .from("products")
+      .select("stock")
+      .eq("id", productId)
+      .single();
+
+    if (fetchError) {
+      return false;
+    }
+
+    if (!product) {
+      return false;
+    }
+
+    // Yeni stok miktarını hesapla
+    const currentStock = product.stock || 0;
+    const newStock = Math.max(0, currentStock - quantityToReduce); // Stok sıfırın altına düşmemeli
+
+    // Stok bilgisini güncelle
+    const { error: updateError } = await supabase
+      .from("products")
+      .update({ stock: newStock })
+      .eq("id", productId);
+
+    if (updateError) {
+      return false;
+    }
+
+    return true;
+  } catch (error) {
+    return false;
+  }
+};
+
+// Toplu olarak ürün stoklarını güncelle
+export const updateMultipleProductsStock = async (items) => {
+  try {
+    // Her ürün için stok güncelleme işlemi yap
+    const results = await Promise.all(
+      items.map((item) => updateProductStock(item.id, item.quantity))
+    );
+
+    // Tüm güncellemeler başarılı mı kontrol et
+    const allSuccessful = results.every((result) => result === true);
+
+    return allSuccessful;
+  } catch (error) {
+    return false;
+  }
+};
+
+// Artık bu export'a gerek yok
+// export { getOrder, createOrder };

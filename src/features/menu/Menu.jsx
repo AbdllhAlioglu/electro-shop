@@ -3,7 +3,7 @@ import { useLoaderData } from "react-router-dom";
 import { getMenu } from "../../services/productService";
 import MenuItem from "./MenuItem";
 import SortMenu from "./SortMenu";
-import SearchBar from "../../ui/SearchBar";
+import SearchBar from "../../ui/common/SearchBar";
 import NotFoundProduct from "./NotFoundProduct";
 import { FaFilter, FaLightbulb, FaTag } from "react-icons/fa";
 

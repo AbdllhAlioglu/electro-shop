@@ -1,66 +1,59 @@
 import { supabase } from "../libs/supabase";
 
-// Ensure consistent ID type (convert to string)
+// ID tipini normalize et (string'e çevir)
 const normalizeId = (id) => String(id);
 
-// Kullanıcı favorilerini yükleme
+// Kullanıcının favorilerini getir
 export async function getUserFavorites(userId) {
   try {
     if (!userId) {
-      console.log("Kullanıcı ID'si eksik, favoriler yüklenemiyor");
       return [];
     }
 
+    // Kullanıcının favorilerini al
     const { data, error } = await supabase
       .from("user_favorites")
       .select("product_id")
       .eq("user_id", userId);
 
     if (error) {
-      console.error("Favorileri yükleme hatası:", error.message);
-      throw error;
+      return [];
     }
 
-    // Sadece ürün ID'lerini diziye dönüştür
+    // Sadece ürün ID'lerini içeren bir array dön
     const favoriteIds = data.map((item) => normalizeId(item.product_id));
-    console.log("Kullanıcı favorileri yüklendi:", favoriteIds);
-
     return favoriteIds;
   } catch (error) {
-    console.error("getUserFavorites hatası:", error);
     return [];
   }
 }
 
-// Favori ekleme
+// Ürün favorilere ekle
 export async function addProductToFavorites(userId, productId) {
   try {
     if (!userId) {
-      console.log("Kullanıcı ID'si eksik, favori eklenemiyor");
       return false;
     }
 
     const normalizedId = normalizeId(productId);
 
-    // Favori zaten var mı kontrol et
-    const { data: existing, error: checkError } = await supabase
+    // Önce ürünün zaten favori olup olmadığını kontrol et
+    const { data: existingFavorites, error: checkError } = await supabase
       .from("user_favorites")
-      .select()
+      .select("id")
       .eq("user_id", userId)
       .eq("product_id", normalizedId);
 
     if (checkError) {
-      console.error("Favori kontrol hatası:", checkError.message);
-      throw checkError;
+      return false;
     }
 
-    // Eğer favori zaten varsa ekleme yapma
-    if (existing && existing.length > 0) {
-      console.log("Ürün zaten favorilerde");
+    // Ürün zaten favorilerdeyse, tekrar eklemeye gerek yok
+    if (existingFavorites && existingFavorites.length > 0) {
       return true;
     }
 
-    // Favori ekle
+    // Ürünü favorilere ekle
     const { error } = await supabase.from("user_favorites").insert({
       user_id: userId,
       product_id: normalizedId,
@@ -68,29 +61,25 @@ export async function addProductToFavorites(userId, productId) {
     });
 
     if (error) {
-      console.error("Favori ekleme hatası:", error.message);
-      throw error;
+      return false;
     }
 
-    console.log("Favori başarıyla eklendi:", normalizedId);
     return true;
   } catch (error) {
-    console.error("addProductToFavorites hatası:", error);
     return false;
   }
 }
 
-// Favori kaldırma
+// Ürünü favorilerden kaldır
 export async function removeProductFromFavorites(userId, productId) {
   try {
     if (!userId) {
-      console.log("Kullanıcı ID'si eksik, favori kaldırılamıyor");
       return false;
     }
 
     const normalizedId = normalizeId(productId);
 
-    // Favoriyi kaldır
+    // Ürünü favorilerden kaldır
     const { error } = await supabase
       .from("user_favorites")
       .delete()
@@ -98,14 +87,11 @@ export async function removeProductFromFavorites(userId, productId) {
       .eq("product_id", normalizedId);
 
     if (error) {
-      console.error("Favori kaldırma hatası:", error.message);
-      throw error;
+      return false;
     }
 
-    console.log("Favori başarıyla kaldırıldı:", normalizedId);
     return true;
   } catch (error) {
-    console.error("removeProductFromFavorites hatası:", error);
     return false;
   }
 }

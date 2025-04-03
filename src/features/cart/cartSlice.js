@@ -1,9 +1,34 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = {
-  cart: [],
-  discount: 0,
+// LocalStorage'dan sepet verilerini yükle
+const loadCartFromStorage = () => {
+  try {
+    const storedCart = localStorage.getItem("cart");
+    const storedDiscount = localStorage.getItem("discount");
+    return {
+      cart: storedCart ? JSON.parse(storedCart) : [],
+      discount: storedDiscount ? Number(storedDiscount) : 0,
+    };
+  } catch (error) {
+    return {
+      cart: [],
+      discount: 0,
+    };
+  }
 };
+
+// LocalStorage'e sepet verilerini kaydet
+const saveCartToStorage = (cart, discount) => {
+  try {
+    localStorage.setItem("cart", JSON.stringify(cart));
+    localStorage.setItem("discount", String(discount));
+  } catch (error) {
+    // Hata olursa sessizce devam et
+  }
+};
+
+const initialState = loadCartFromStorage();
+
 const cartSlice = createSlice({
   name: "cart",
   initialState,
@@ -27,6 +52,7 @@ const cartSlice = createSlice({
           totalPrice: price,
         });
       }
+      saveCartToStorage(state.cart, state.discount);
     },
     removeFromCart(state, action) {
       const id = action.payload;
@@ -37,6 +63,7 @@ const cartSlice = createSlice({
       } else {
         existingProduct.quantity -= 1;
       }
+      saveCartToStorage(state.cart, state.discount);
     },
     increaseItemQuantity(state, action) {
       const id = action.payload;
@@ -46,6 +73,7 @@ const cartSlice = createSlice({
         existingProduct.totalPrice =
           existingProduct.quantity * existingProduct.price;
       }
+      saveCartToStorage(state.cart, state.discount);
     },
     decreaseItemQuantity(state, action) {
       const id = action.payload;
@@ -58,15 +86,20 @@ const cartSlice = createSlice({
       if (existingProduct.quantity === 0) {
         state.cart = state.cart.filter((product) => product.id !== id);
       }
+      saveCartToStorage(state.cart, state.discount);
     },
     clearCart(state) {
       state.cart = [];
+      state.discount = 0;
+      saveCartToStorage(state.cart, state.discount);
     },
     applyDiscount(state, action) {
       state.discount = action.payload; // İndirim yüzdesini güncelle
+      saveCartToStorage(state.cart, state.discount);
     },
     clearDiscount(state) {
       state.discount = 0; // İndirimi sıfırla
+      saveCartToStorage(state.cart, state.discount);
     },
   },
 });

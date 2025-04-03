@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import logo from "/assets/Logo.svg";
+import logo from "/assets/icons/Logo.svg";
 import { useSelector, useDispatch } from "react-redux";
-import { logout } from "../features/user/userSlice";
+import { logout } from "../../features/user/userSlice";
 import { FaSignOutAlt, FaBars, FaTimes, FaUser } from "react-icons/fa";
-import avatar from "/assets/avatar.svg";
-import { useAuth } from "../context/AuthContext";
+import avatar from "/assets/icons/avatar.svg";
+import { useAuth } from "../../context/AuthContext";
 
 export default function Header() {
   const { isAuthenticated } = useAuth();

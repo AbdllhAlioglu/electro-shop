@@ -1,12 +1,11 @@
 import { supabase } from "../libs/supabase";
 import { clearCart } from "../features/cart/cartSlice";
 import store from "../store";
+import { updateMultipleProductsStock } from "./productService";
 
 // Sipariş oluştur
 export async function createOrder(newOrder) {
   try {
-    console.log("Creating order in Supabase with ID:", newOrder.id);
-
     // Şimdiki zaman için timestamp oluştur
     const now = new Date().toISOString();
 
@@ -33,11 +32,8 @@ export async function createOrder(newOrder) {
       .single();
 
     if (orderError) {
-      console.error("Error creating order:", orderError);
       throw new Error("Order creation failed: " + orderError.message);
     }
-
-    console.log("Order inserted:", orderData);
 
     // 2. Sipariş ürünlerini order_items tablosuna ekle
     if (newOrder.cart && newOrder.cart.length > 0) {
@@ -60,21 +56,19 @@ export async function createOrder(newOrder) {
         };
       });
 
-      console.log("Order items to be inserted:", orderItems);
-
       const { error: itemsError } = await supabase
         .from("order_items")
         .insert(orderItems);
 
       if (itemsError) {
-        console.error("Error creating order items:", itemsError);
         // Sipariş ürünleri eklenmezse siparişi de sil
         await supabase.from("orders").delete().eq("id", newOrder.id);
         throw new Error("Order items creation failed: " + itemsError.message);
       }
-    }
 
-    console.log("Order successfully created:", newOrder.id);
+      // 3. Ürün stoklarını güncelle
+      await updateMultipleProductsStock(newOrder.cart);
+    }
 
     // Sepeti temizle
     store.dispatch(clearCart());
@@ -87,7 +81,6 @@ export async function createOrder(newOrder) {
       discountedTotal: newOrder.discountedTotal || 0,
     };
   } catch (error) {
-    console.error("Error in createOrder:", error);
     throw error;
   }
 }
@@ -95,8 +88,6 @@ export async function createOrder(newOrder) {
 // Sipariş getir
 export async function getOrder(orderId) {
   try {
-    console.log("Fetching order from Supabase...", orderId);
-
     // Ana sipariş bilgilerini al
     const { data: order, error: orderError } = await supabase
       .from("orders")
@@ -105,11 +96,8 @@ export async function getOrder(orderId) {
       .single();
 
     if (orderError) {
-      console.error("Error fetching order:", orderError);
       throw new Error(`Couldn't find order #${orderId}`);
     }
-
-    console.log("Order fetched:", order);
 
     // Sipariş kalemlerini al
     const { data: orderItems, error: itemsError } = await supabase
@@ -118,15 +106,11 @@ export async function getOrder(orderId) {
       .eq("order_id", orderId);
 
     if (itemsError) {
-      console.error("Error fetching order items:", itemsError);
       throw new Error(`Couldn't find items for order #${orderId}`);
     }
 
-    console.log("Order items fetched:", orderItems);
-
     // Sipariş öğeleri bulunamadı veya boş dizi ise
     if (!orderItems || orderItems.length === 0) {
-      console.warn(`No items found for order #${orderId}`);
       return {
         ...order,
         cart: [],
@@ -153,10 +137,8 @@ export async function getOrder(orderId) {
       discountedTotal: order.discounted_total || 0,
     };
 
-    console.log("Final order with items:", result);
     return result;
   } catch (error) {
-    console.error("Error in getOrder:", error);
     throw new Error(`Error fetching order #${orderId}`);
   }
 }
@@ -164,8 +146,6 @@ export async function getOrder(orderId) {
 // Tüm siparişleri getir
 export async function getAllOrders() {
   try {
-    console.log("Fetching all orders from Supabase...");
-
     // Get current user ID from state
     const state = store.getState();
     const userId = state.user.user?.id;
@@ -184,32 +164,22 @@ export async function getAllOrders() {
     const { data: orders, error: ordersError } = await query;
 
     if (ordersError) {
-      console.error("Error fetching orders:", ordersError);
       throw new Error("Failed to fetch orders");
     }
 
-    console.log("Orders fetched from Supabase:", orders);
-
     if (!orders || orders.length === 0) {
-      console.log("No orders found in Supabase");
       return [];
     }
 
     // Her sipariş için sipariş kalemlerini al
     const ordersWithItems = await Promise.all(
       orders.map(async (order) => {
-        console.log(`Fetching items for order ${order.id}...`);
-
         const { data: orderItems, error: itemsError } = await supabase
           .from("order_items")
           .select("*")
           .eq("order_id", order.id);
 
         if (itemsError) {
-          console.error(
-            `Error fetching items for order ${order.id}:`,
-            itemsError
-          );
           return {
             ...order,
             cart: [],
@@ -217,8 +187,6 @@ export async function getAllOrders() {
             discountedTotal: order.discounted_total || 0,
           };
         }
-
-        console.log(`Items for order ${order.id}:`, orderItems);
 
         const cart = orderItems.map((item) => ({
           id: item.product_id,
@@ -238,10 +206,8 @@ export async function getAllOrders() {
       })
     );
 
-    console.log("Final orders with items:", ordersWithItems);
     return ordersWithItems;
   } catch (error) {
-    console.error("Error in getAllOrders:", error);
     throw new Error("Failed to fetch orders");
   }
 }

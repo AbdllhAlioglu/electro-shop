@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import Button from "../../ui/Button";
+import Button from "../../ui/common/Button";
 import { useAuth } from "../../context/AuthContext";
 import { fetchUserProfile } from "./userSlice";
 import { createUserProfile } from "../../services/authService";
