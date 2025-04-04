@@ -41,7 +41,10 @@ export default {
         },
       },
       fontFamily: {
-        sans: "Roboto Mono , monospace",
+        sans: ["Inter", "Helvetica", "Arial", "sans-serif"],
+      },
+      scale: {
+        101: "1.01",
       },
     },
   },

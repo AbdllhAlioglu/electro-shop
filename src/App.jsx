@@ -18,7 +18,7 @@ import PageNotFound from "./ui/pages/PageNotFound";
 
 const router = createBrowserRouter([
   {
-    element: <AppLayout />, // This is the parent layout
+    element: <AppLayout />,
     children: [
       {
         path: "/",

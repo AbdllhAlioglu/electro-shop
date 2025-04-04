@@ -27,7 +27,13 @@ export default function RecommendedItem({ product }) {
 
   return (
     <div className="p-4 bg-white shadow rounded flex flex-col items-center gap-2">
-      <img src={image} alt={name} className="w-24 h-24 object-contain mb-2" />
+      <div className="w-24 h-24 overflow-hidden bg-gray-50 rounded-md border border-gray-100 flex items-center justify-center mb-2">
+        <img
+          src={image}
+          alt={name}
+          className="max-w-full max-h-full object-contain p-1"
+        />
+      </div>
       <h3 className="text-lg font-medium">{name}</h3>
       <p className="text-customGreen-500 font-semibold">{price} ₺</p>
       <Button type="small" onClick={handleAddToCart}>

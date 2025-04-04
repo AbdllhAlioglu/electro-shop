@@ -1,17 +1,20 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "/assets/icons/Logo.svg";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { logout } from "../../features/user/userSlice";
 import { FaSignOutAlt, FaBars, FaTimes, FaUser } from "react-icons/fa";
 import avatar from "/assets/icons/avatar.svg";
 import { useAuth } from "../../context/AuthContext";
+import { useLocation } from "react-router-dom";
 
 export default function Header() {
   const { isAuthenticated } = useAuth();
-  const username = useSelector((state) => state.user.userName);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
+  // o an hangi route'ta ise  o route'un altına padding ver
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -22,6 +25,12 @@ export default function Header() {
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  const getLinkClass = (path) => {
+    return location.pathname === path
+      ? "text-white font-bold"
+      : "text-gray-200";
   };
 
   return (
@@ -50,16 +59,16 @@ export default function Header() {
       >
         {isAuthenticated ? (
           <>
-            <Link to="/menu" className="text-gray-200">
+            <Link to="/menu" className={getLinkClass("/menu")}>
               Ürünler
             </Link>
-            <Link to="/favorites" className="text-gray-200">
+            <Link to="/favorites" className={getLinkClass("/favorites")}>
               Favoriler
             </Link>
-            <Link to="/orders" className="text-gray-200">
+            <Link to="/orders" className={getLinkClass("/orders")}>
               Siparişler
             </Link>
-            <Link to="/cart" className="text-gray-200">
+            <Link to="/cart" className={getLinkClass("/cart")}>
               Sepet
             </Link>
             <Link to="/profile" className="flex items-center gap-2">
@@ -68,7 +77,6 @@ export default function Header() {
                 alt="Kullanıcı"
                 className="w-8 h-8 rounded-full"
               />
-              <span className="text-gray-200">{username}</span>
             </Link>
             <button
               onClick={handleLogout}

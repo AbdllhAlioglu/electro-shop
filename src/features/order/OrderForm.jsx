@@ -20,7 +20,7 @@ function createOrderId() {
 }
 
 const isValidPhone = (str) =>
-  /^\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}$/.test(
+  /^(\+90|0)?[\s-]?\(?5[0-9]{2}\)?[\s-]?[0-9]{3}[\s-]?[0-9]{2}[\s-]?[0-9]{2}$/.test(
     str
   );
 
@@ -64,7 +64,9 @@ function OrderForm() {
         try {
           const { latitude, longitude } = position.coords;
           const data = await getAddress({ latitude, longitude });
-          setAddress(data.locality || data.city || "Address not found");
+          setAddress(
+            data.locality + " " + data.countryName + " " + data.countryCode
+          );
         } catch (error) {
           alert("Failed to fetch your address. Please try again.");
         } finally {
@@ -80,7 +82,19 @@ function OrderForm() {
 
   const handleCardInputChange = (e) => {
     const { name, value } = e.target;
-    setCreditCard((prev) => ({ ...prev, [name]: value }));
+
+    if (name === "expiry") {
+      // Format expiry date with a slash after 2 digits (MM/YY)
+      if (value.length === 2 && creditCard.expiry.length === 1) {
+        setCreditCard((prev) => ({ ...prev, [name]: value + "/" }));
+      } else if (value.length === 2 && !value.includes("/")) {
+        setCreditCard((prev) => ({ ...prev, [name]: value + "/" }));
+      } else {
+        setCreditCard((prev) => ({ ...prev, [name]: value }));
+      }
+    } else {
+      setCreditCard((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleCardInputFocus = (e) => {
@@ -118,6 +132,7 @@ function OrderForm() {
                 name="customer"
                 required
                 defaultValue={userName}
+                maxLength="50"
               />
             </div>
 
@@ -130,9 +145,16 @@ function OrderForm() {
                 type="tel"
                 name="phone"
                 required
+                placeholder="05XX XXX XX XX"
+                maxLength="13"
               />
+              <p className="text-xs text-gray-500 mt-1">
+                Örnek: 05XX XXX XX XX formatında giriniz (maksimum 11 karakter)
+              </p>
               {formErrors?.phone && (
-                <p className="mt-1 text-sm text-red-600">{formErrors.phone}</p>
+                <p className="mt-1 text-sm text-red-600">
+                  Geçerli bir telefon numarası giriniz (5XX XXX XX XX)
+                </p>
               )}
             </div>
 
@@ -148,6 +170,7 @@ function OrderForm() {
                   required
                   value={address}
                   onChange={(e) => setAddress(e.target.value)}
+                  maxLength="200"
                 />
                 <button
                   type="button"
@@ -258,7 +281,12 @@ function OrderForm() {
                 value={creditCard.name}
                 onChange={handleCardInputChange}
                 onFocus={handleCardInputFocus}
+                maxLength="50"
               />
+              <p className="text-xs text-gray-500 mt-1">
+                Kart üzerinde yazan ad ve soyadı birebir giriniz (maksimum 50
+                karakter)
+              </p>
             </div>
 
             <div className="space-y-2">
@@ -275,6 +303,9 @@ function OrderForm() {
                 onChange={handleCardInputChange}
                 onFocus={handleCardInputFocus}
               />
+              <p className="text-xs text-gray-500 mt-1">
+                16 haneli kart numarasını boşluk olmadan giriniz
+              </p>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
@@ -287,11 +318,14 @@ function OrderForm() {
                   name="expiry"
                   className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                   placeholder="AA/YY"
-                  maxLength="4"
+                  maxLength="5"
                   value={creditCard.expiry}
                   onChange={handleCardInputChange}
                   onFocus={handleCardInputFocus}
                 />
+                <p className="text-xs text-gray-500 mt-1">
+                  Format: AA/YY (Örn: 05/25)
+                </p>
               </div>
 
               <div className="space-y-2">
@@ -308,6 +342,9 @@ function OrderForm() {
                   onChange={handleCardInputChange}
                   onFocus={handleCardInputFocus}
                 />
+                <p className="text-xs text-gray-500 mt-1">
+                  Kartın arkasındaki 3 haneli güvenlik kodu
+                </p>
               </div>
             </div>
           </div>
@@ -332,8 +369,7 @@ export async function action({ request }) {
   // Validation
   const errors = {};
   if (!isValidPhone(data.phone))
-    errors.phone =
-      "Please provide a valid phone number. We might need to contact you.";
+    errors.phone = "Geçerli bir telefon numarası giriniz (5XX XXX XX XX)";
 
   if (Object.keys(errors).length > 0) return errors;
 

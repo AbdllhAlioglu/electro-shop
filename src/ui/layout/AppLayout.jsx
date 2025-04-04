@@ -1,7 +1,7 @@
 import React from "react";
 import Header from "./Header";
 import Footer from "./Footer";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import CartOverview from "../../features/cart/CartOverview";
 import { useSelector } from "react-redux";
 import logo from "/assets/icons/Logo.svg";
@@ -11,6 +11,11 @@ import AuthForm from "../../features/auth/AuthForm";
 export default function AppLayout() {
   const { isAuthenticated, isLoading } = useAuth();
   const cart = useSelector((state) => state.cart.cart);
+  const hasItems = cart.length > 0;
+  const location = useLocation();
+  const isMenuPage =
+    location.pathname === "/menu" || location.pathname === "/menu/";
+  const needsPadding = hasItems && isMenuPage;
 
   if (isLoading) {
     return (
@@ -180,12 +185,16 @@ export default function AppLayout() {
     <div className="min-h-screen flex flex-col">
       <Header />
       <div className="flex-grow bg-gray-50">
-        <main className="mx-4 sm:mx-8 md:mx-16 max-w-full min-h-screen">
+        <main
+          className={`mx-4 sm:mx-8 md:mx-16 max-w-full min-h-screen ${
+            needsPadding ? "pb-16" : ""
+          }`}
+        >
           <Outlet />
         </main>
       </div>
 
-      {cart.length > 0 && <CartOverview />}
+      {hasItems && isMenuPage && <CartOverview />}
       <Footer />
     </div>
   );

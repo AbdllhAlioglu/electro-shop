@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   FaRegHeart,
@@ -17,31 +17,9 @@ import { formatCurrency } from "../../utils/helpers";
 import { addToCart } from "../cart/cartSlice";
 import { useAuth } from "../../context/AuthContext";
 import { toast } from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
 
 // Ensure consistent ID type (convert to string)
 const normalizeId = (id) => String(id);
-
-// formatFeatures fonksiyonunu tanımla
-function formatFeatures(features) {
-  // Eğer features string ise JSON olarak parse etmeyi dene
-  if (typeof features === "string") {
-    try {
-      return JSON.parse(features);
-    } catch (error) {
-      // JSON değilse virgülle ayrılmış liste olarak kabul et
-      return features.split(",").map((item) => item.trim());
-    }
-  }
-
-  // Halihazırda array ise olduğu gibi döndür
-  if (Array.isArray(features)) {
-    return features;
-  }
-
-  // Hiçbiri değilse boş array döndür
-  return [];
-}
 
 export default function MenuItem({ product }) {
   const {
@@ -60,11 +38,8 @@ export default function MenuItem({ product }) {
   const { isAuthenticated } = useAuth();
   const favorites = useSelector((state) => state.favorites.favorites);
   const cart = useSelector((state) => state.cart.cart);
-  const [showCartNotification, setShowCartNotification] = useState(false);
-  const [showLikeNotification, setShowLikeNotification] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [isProcessingFavorite, setIsProcessingFavorite] = useState(false);
-  const navigate = useNavigate();
 
   // Features'ı array formatına dönüştür
   const features = React.useMemo(() => {
@@ -117,7 +92,7 @@ export default function MenuItem({ product }) {
   const handleHeartClick = async () => {
     if (!isAuthenticated) {
       // Kullanıcı giriş yapmadıysa bildirim göster
-      alert("Favorilere eklemek için giriş yapmalısınız.");
+      toast.error("Favorilere eklemek için giriş yapmalısınız.");
       return;
     }
 
@@ -128,15 +103,14 @@ export default function MenuItem({ product }) {
     try {
       if (isLiked) {
         await dispatch(removeFromFavoritesAsync(id)).unwrap();
+        toast.success("Ürün favorilerden kaldırıldı");
       } else {
         await dispatch(addToFavoritesAsync(id)).unwrap();
+        toast.success("Ürün favorilere eklendi");
       }
-
-      // Trigger the like notification animation
-      setShowLikeNotification(true);
     } catch (error) {
       console.error("Favori işlemi hatası:", error);
-      alert("Favori işlemi gerçekleştirilemedi: " + error);
+      toast.error("Favori işlemi gerçekleştirilemedi");
     } finally {
       setIsProcessingFavorite(false);
     }
@@ -158,28 +132,8 @@ export default function MenuItem({ product }) {
       dispatch(addToCart({ id, name, price, image, quantity: 1 }));
     }
 
-    // Bildirim gösterilir
-    setShowCartNotification(true);
+    toast.success(`${name} sepete eklendi!`);
   };
-
-  // Bildirimin otomatik olarak kaybolması
-  useEffect(() => {
-    if (showCartNotification) {
-      const timeout = setTimeout(() => {
-        setShowCartNotification(false);
-      }, 3000); // 3 saniye sonra kapatılır
-      return () => clearTimeout(timeout); // Temizlik işlemi
-    }
-  }, [showCartNotification]);
-
-  useEffect(() => {
-    if (showLikeNotification) {
-      const timeout = setTimeout(() => {
-        setShowLikeNotification(false);
-      }, 1000);
-      return () => clearTimeout(timeout);
-    }
-  }, [showLikeNotification]);
 
   // Generate rating stars
   const renderRatingStars = (rating) => {
@@ -218,19 +172,6 @@ export default function MenuItem({ product }) {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {/* Notification Badges */}
-      {showCartNotification && (
-        <div className="absolute top-4 right-4 z-30 bg-customGreen-500 text-white px-3 py-1.5 rounded-lg shadow-lg animate-fade-left">
-          Sepete Eklendi
-        </div>
-      )}
-
-      {showLikeNotification && (
-        <div className="absolute top-4 left-4 z-30 bg-customGreen-500 text-white px-3 py-1.5 rounded-lg shadow-lg animate-fade-right">
-          {isLiked ? "Favorilere Eklendi" : "Favorilerden Kaldırıldı"}
-        </div>
-      )}
-
       {/* Image Container with Aspect Ratio */}
       <div className="relative pt-[75%] overflow-hidden bg-gray-50">
         {/* Category Badge */}

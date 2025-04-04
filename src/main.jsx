@@ -14,33 +14,37 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <Toaster
           position="top-center"
           gutter={12}
-          containerStyle={{ margin: "8px" }}
+          containerClassName="toast-container"
           toastOptions={{
             success: {
               duration: 3000,
               style: {
-                background: "#4ade80",
-                color: "white",
+                background: "#ffffff",
+                color: "#31473A",
                 fontWeight: "500",
                 padding: "12px 16px",
-                borderRadius: "8px",
-                boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                borderLeft: "4px solid #31473A",
+                borderRadius: "4px",
+                boxShadow: "0 4px 12px rgba(0, 0, 0, 0.12)",
               },
+              icon: "✓",
             },
             error: {
-              duration: 3000,
+              duration: 2000,
               style: {
-                background: "#ef4444",
-                color: "white",
+                background: "#ffffff",
+                color: "#e53e3e",
                 fontWeight: "500",
                 padding: "12px 16px",
-                borderRadius: "8px",
-                boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                borderLeft: "4px solid #e53e3e",
+                borderRadius: "4px",
+                boxShadow: "0 4px 12px rgba(0, 0, 0, 0.12)",
               },
             },
             style: {
               fontSize: "14px",
               maxWidth: "400px",
+              padding: "12px 16px",
             },
           }}
         />

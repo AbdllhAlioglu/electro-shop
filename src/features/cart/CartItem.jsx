@@ -30,11 +30,13 @@ function CartItem({ item, discount }) {
 
   return (
     <li className="py-3 sm:flex sm:items-center sm:justify-between">
-      <img
-        src={image}
-        alt={name}
-        className="w-20 h-20 object-cover rounded-lg"
-      />
+      <div className="flex-shrink-0 w-20 h-20 overflow-hidden rounded-lg bg-gray-50 border border-gray-100">
+        <img
+          src={image}
+          alt={name}
+          className="w-full h-full object-contain p-1"
+        />
+      </div>
       <p className="mb-1 sm:mb-0">
         {quantity}&times; {name}
       </p>
