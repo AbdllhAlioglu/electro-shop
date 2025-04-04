@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import logo from "/assets/icons/Logo.svg";
 import { useAuth } from "../../context/AuthContext";
 import AuthForm from "../../features/auth/AuthForm";
+import CustomerSupport from "../common/CustomerSupport";
 
 export default function AppLayout() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -29,6 +30,7 @@ export default function AppLayout() {
           </main>
         </div>
         <Footer />
+        <CustomerSupport />
       </div>
     );
   }
@@ -177,6 +179,7 @@ export default function AppLayout() {
           </main>
         </div>
         <Footer />
+        <CustomerSupport />
       </div>
     );
   }
@@ -196,6 +199,7 @@ export default function AppLayout() {
 
       {hasItems && isMenuPage && <CartOverview />}
       <Footer />
+      <CustomerSupport />
     </div>
   );
 }

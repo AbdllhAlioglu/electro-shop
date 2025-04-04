@@ -71,6 +71,7 @@ export default function Header() {
             <Link to="/cart" className={getLinkClass("/cart")}>
               Sepet
             </Link>
+
             <Link to="/profile" className="flex items-center gap-2">
               <img
                 src={avatar}

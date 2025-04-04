@@ -12,6 +12,7 @@ export default {
         "fade-right": "fadeRight 1s linear",
         "fade-right-thrice": "fadeRight 1s linear 3", // Custom animation for thrice
         "fade-up": "fadeUp 2s ease-out",
+        "pulse-ring": "pulseRing 1.5s cubic-bezier(0.5, 0, 0.2, 1) infinite",
       },
       keyframes: {
         fadeLeft: {
@@ -25,6 +26,20 @@ export default {
         fadeUp: {
           "0%": { opacity: "0", transform: "translateY(20px)" },
           "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+        pulseRing: {
+          "0%": {
+            transform: "scale(0.95)",
+            boxShadow: "0 0 0 0 rgba(49, 71, 58, 0.7)",
+          },
+          "70%": {
+            transform: "scale(1)",
+            boxShadow: "0 0 0 10px rgba(49, 71, 58, 0)",
+          },
+          "100%": {
+            transform: "scale(0.95)",
+            boxShadow: "0 0 0 0 rgba(49, 71, 58, 0)",
+          },
         },
       },
       colors: {

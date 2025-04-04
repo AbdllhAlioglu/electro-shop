@@ -169,6 +169,7 @@ export default function AuthForm() {
                 placeholder="E-posta adresiniz"
                 {...registerForm("email", {
                   required: "E-posta adresi gereklidir",
+
                   pattern: {
                     value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                     message: "Geçersiz e-posta adresi",

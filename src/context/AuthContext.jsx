@@ -16,7 +16,7 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     if (error) {
-      toast.error(error);
+      toast.error("Bir hata oluştu. Lütfen daha sonra tekrar deneyiniz.");
     }
   }, [error]);
 
@@ -24,7 +24,7 @@ export function AuthProvider({ children }) {
   const isLoading = status === "loading";
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, isLoading, error }}>
+    <AuthContext.Provider value={{ isAuthenticated, isLoading, error, user }}>
       {children}
     </AuthContext.Provider>
   );
